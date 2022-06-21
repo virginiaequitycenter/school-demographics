@@ -4,6 +4,24 @@ library(DT)
 
 # data from VDOE Fall Membership Build-a-Table
 # https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304
+# Query parameters: fall_membership_race.csv
+#   school years = 2020-2021, 2019-2020 (for pre-pandemic comparison)
+#   report level = school
+#   divisions = charlottesville, albemarle
+#   schools = [everything that's not elementary], but might be useful to do this for elementary to make it more general
+#   race = [all individual races, but didn't include non-hispanic or unknown]
+#   grades = all grades (aggregated, not individual grades)
+#   [everything else] = all students
+#   
+# Query parameters: fall_membership_disadvantaged.csv
+#   school years = 2020-2021, 2019-2020 (for pre-pandemic comparison)
+#   report level = school
+#   divisions = charlottesville, albemarle
+#   schools = [everything that's not elementary], but might be useful to do this for elementary to make it more general
+#   race = all races (aggregated, not individual categories)
+#   grades = all grades (aggregated, not individual grades)
+#   disadvantaged = yes, no
+#   [everything else] = all students
 
 # read data ----
 race_ethn <- read_csv("fall_membership_race.csv") %>% 
