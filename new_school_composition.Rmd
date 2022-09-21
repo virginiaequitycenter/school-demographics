@@ -2,9 +2,7 @@
 title: "Charlottesville/Albemarle Schools"
 author: "Compiled by Michele Claibourn & Nina Schoonover, UVA Equity Center"
 date: "9/20/2022"
-output:
-  pdf_document: default
-  html_document: default
+output: html_document
 subtitle: Demographic Composition
 ---
 
@@ -15,6 +13,18 @@ library(tidyverse)
 library(reactable)
 
 load("newstudents.Rdata")
+students2022 <- students2022 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+students2021 <- students2021 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+students2020 <- students2020 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
 
 ```
 
@@ -48,7 +58,7 @@ reactable(students2022,
                                 style = list(background = "#C5CCD2")),
             count_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#C5CCD2")),
-            count_multi = colDef(name = "Multiracial",
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#C5CCD2")),
             count_white = colDef(name = "White",
                                 style = list(background = "#C5CCD2")),
@@ -68,7 +78,7 @@ reactable(students2022,
             perc_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
-            perc_multi = colDef(name = "Multiracial",
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
             perc_white = colDef(name = "White",
@@ -83,12 +93,12 @@ reactable(students2022,
           columnGroups = list(
             colGroup(name = "Counts by Racial/Ethnic Identity", 
                      columns = c("count_aian", "count_asian", "count_black", "count_latinx",
-                                 "count_multi", "count_white")),
+                                 "count_nhpi", "count_white")),
             colGroup(name = "Counts by Economic Status", 
                      columns = c("count_adv", "count_disadv")),
             colGroup(name = "Percents by Racial/Ethnic Identity", 
                      columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
-                                 "perc_multi", "perc_white")),
+                                 "perc_nhpi", "perc_white")),
             colGroup(name = "Percents by Economic Status", 
                      columns = c("perc_adv", "perc_disadv"))
           ),
@@ -113,7 +123,7 @@ reactable(students2021,
                                 style = list(background = "#C5CCD2")),
             count_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#C5CCD2")),
-            count_multi = colDef(name = "Multiracial",
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#C5CCD2")),
             count_white = colDef(name = "White",
                                 style = list(background = "#C5CCD2")),
@@ -133,7 +143,7 @@ reactable(students2021,
             perc_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
-            perc_multi = colDef(name = "Multiracial",
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
             perc_white = colDef(name = "White",
@@ -148,12 +158,12 @@ reactable(students2021,
           columnGroups = list(
             colGroup(name = "Counts by Racial/Ethnic Identity", 
                      columns = c("count_aian", "count_asian", "count_black", "count_latinx",
-                                 "count_multi", "count_white")),
+                                 "count_nhpi", "count_white")),
             colGroup(name = "Counts by Economic Status", 
                      columns = c("count_adv", "count_disadv")),
             colGroup(name = "Percents by Racial/Ethnic Identity", 
                      columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
-                                 "perc_multi", "perc_white")),
+                                 "perc_nhpi", "perc_white")),
             colGroup(name = "Percents by Economic Status", 
                      columns = c("perc_adv", "perc_disadv"))
           ),
@@ -178,11 +188,9 @@ reactable(students2020,
                                 style = list(background = "#C5CCD2")),
             count_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#C5CCD2")),
-            count_multi = colDef(name = "Multiracial",
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#C5CCD2")),
             count_white = colDef(name = "White",
-                                style = list(background = "#C5CCD2")),
-            count_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#C5CCD2")),
             count_adv = colDef(name = "Advantaged",
                                 style = list(background = "#B4D6DB")),
@@ -200,13 +208,10 @@ reactable(students2020,
             perc_latinx = colDef(name = "Hispanic",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
-            perc_multi = colDef(name = "Multiracial",
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
             perc_white = colDef(name = "White",
-                                style = list(background = "#ADB7C0FF"),
-                               format = colFormat(suffix = "%")),
-            perc_nhpi = colDef(name = "Native HI Pacific Islander",
                                 style = list(background = "#ADB7C0FF"),
                                format = colFormat(suffix = "%")),
             perc_adv = colDef(name = "Advantaged",
@@ -218,12 +223,12 @@ reactable(students2020,
           columnGroups = list(
             colGroup(name = "Counts by Racial/Ethnic Identity", 
                      columns = c("count_aian", "count_asian", "count_black", "count_latinx",
-                                 "count_multi", "count_white", "count_nhpi")),
+                                 "count_nhpi", "count_white")),
             colGroup(name = "Counts by Economic Status", 
                      columns = c("count_adv", "count_disadv")),
-            colGroup(name = "Percents by Racial/Ethnic Identity", 
+            colGroup(name = "Percents by Racial/Ethnic Identity",
                      columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
-                                 "perc_multi", "perc_white", "perc_nhpi")),
+                                 "perc_nhpi", "perc_white")),
             colGroup(name = "Percents by Economic Status", 
                      columns = c("perc_adv", "perc_disadv"))
           ),

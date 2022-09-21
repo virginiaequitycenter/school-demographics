@@ -64,12 +64,14 @@ race2022 <- race_ethn %>% filter(school_year == "2021-2022") %>%
   pivot_wider(names_from = race, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0)))
 
-names(race2022) <- c("year", "division", "school", 
-                     "count_aian", "count_asian", "count_black",
-                     "count_latinx", "count_multi", "count_white",
-                     "count_nhpi", "perc_aian", "perc_asian", 
-                     "perc_black", "perc_latinx", "perc_multi",
-                     "perc_white")
+colnames(race2022)
+
+names(race2022) <- c("year", "division", "school", "students",
+                     "count_asian", "count_black",
+                     "count_latinx", "count_white",
+                     "count_aian", "count_nhpi", "perc_asian", 
+                     "perc_black", "perc_latinx",
+                     "perc_white", "perc_aian", "perc_nhpi" )
 
 dis2022 <- disadvant %>% filter(school_year == "2021-2022") %>% 
   mutate(count = if_else(total_count == "<", "9", total_count), # based on total students in race2022
@@ -84,6 +86,7 @@ dis2022 <- disadvant %>% filter(school_year == "2021-2022") %>%
   pivot_wider(names_from = disadvantaged, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0)))
 
+colnames(dis2022)
 names(dis2022) <- c("year", "division", "school", "students", 
                     "count_adv", "count_disadv", "perc_adv", "perc_disadv")
 
@@ -99,11 +102,11 @@ race2021 <- race_ethn %>% filter(school_year == "2020-2021") %>%
   pivot_wider(names_from = race, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0)))
 
-names(race2021) <- c("year", "division", "school", "count_aian", "count_asian", "count_black",
-                     "count_latinx", "count_multi", "count_white",
-                     "count_nhpi", "perc_aian", "perc_asian", 
-                     "perc_black", "perc_latinx", "perc_multi",
-                     "perc_white")
+colnames(race2021)
+names(race2021) <- c("year", "division", "school", "students", "count_asian", "count_black",
+                     "count_latinx", "count_nhpi", "count_white", "count_aian",
+                      "perc_asian", "perc_black", "perc_latinx", "perc_nhpi",
+                     "perc_white", "perc_aian")
 
 dis2021 <- disadvant %>% filter(school_year == "2020-2021") %>% 
   mutate(count = str_remove(total_count, ","),
@@ -117,6 +120,7 @@ dis2021 <- disadvant %>% filter(school_year == "2020-2021") %>%
   pivot_wider(names_from = disadvantaged, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0))) 
 
+colnames(dis2021)
 names(dis2021) <- c("year", "division", "school", "students", 
                     "count_adv", "count_disadv", "perc_adv", "perc_disadv")
 
@@ -132,12 +136,13 @@ race2020 <- race_ethn %>% filter(school_year == "2019-2020") %>%
   pivot_wider(names_from = race, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0)))
 
-names(race2020) <- c("year", "division", "school",
-                     "count_aian", "count_asian", "count_black",
-                     "count_latinx", "count_multi", "count_white",
-                     "count_nhpi", "perc_aian", "perc_asian", 
-                     "perc_black", "perc_latinx", "perc_multi",
-                     "perc_white", "perc_nhpi")
+colnames(race2020)
+names(race2020) <- c("year", "division", "school", "students",
+                    "count_asian", "count_black",
+                    "count_latinx", "count_nhpi", "count_white",
+                    "count_aian", "perc_asian", "perc_black", 
+                    "perc_latinx", "perc_nhpi",
+                     "perc_white", "perc_aian")
 
 dis2020 <- disadvant %>% filter(school_year == "2019-2020") %>% 
   mutate(count = str_remove(total_count, ","),
@@ -151,15 +156,16 @@ dis2020 <- disadvant %>% filter(school_year == "2019-2020") %>%
   pivot_wider(names_from = disadvantaged, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0))) 
 
+colnames(dis2020)
 names(dis2020) <- c("year", "division", "school", "students", 
                     "count_adv", "count_disadv", "perc_adv", "perc_disadv")
 
 # combine tables and save
-students2022 <- left_join(race2022, dis2022)
-students2021 <- left_join(race2021, dis2021)
-students2020 <- left_join(race2020, dis2020)
+students2022 <- left_join(race2022, dis2022, by = c("year", "division", "school")) %>% select(-"students.y", students = "students.x")
+students2021 <- left_join(race2021, dis2021, by = c("year", "division", "school")) %>% select(-"students.y", students = "students.x")
+students2020 <- left_join(race2020, dis2020, by = c("year", "division", "school")) %>% select(-"students.y", students = "students.x")
 
-save(students2020, students2022, file = "newstudents.Rdata")
+save(students2020, students2021, students2022, file = "newstudents.Rdata")
 
 
 # # Colors
