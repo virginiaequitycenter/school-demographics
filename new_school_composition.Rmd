@@ -1,6 +1,6 @@
 ---
 title: "Charlottesville/Albemarle Schools"
-author: "Compiled by Michele Claibourn & Nina Schoonover, UVA Equity Center"
+author: "Compiled by Michele Claibourn, Nina Schoonover & Elizabeth Mitchell, UVA Equity Center"
 date: "9/20/2022"
 output: html_document
 subtitle: Demographic Composition
@@ -31,7 +31,7 @@ students2020 <- students2020 %>%
 ## Demographic Tables {.tabset}
 The tables below provide the demographic composition of Charlottesville and Albemarle Schools for 2021-2022, 2020-2021, and 2019-2020.
 
-These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's Fall Membership Build-a-Table site (https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
+These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's [Fall Membership Build-a-Table site](https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
 
 According to VDOE documentation
 
