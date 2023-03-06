@@ -1,7 +1,7 @@
 ---
 title: "Charlottesville/Albemarle Schools"
-author: "Compiled by Michele Claibourn, Nina Schoonover & Elizabeth Mitchell, UVA Equity Center"
-date: "9/20/2022"
+author: "Compiled by Michele Claibourn, Nina Schoonover, & Elizabeth Mitchell, UVA Equity Center"
+date: "3/1/2023"
 output: html_document
 subtitle: Demographic Composition
 ---
@@ -13,6 +13,10 @@ library(tidyverse)
 library(reactable)
 
 load("newstudents.Rdata")
+students2023 <- students2023 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
 students2022 <- students2022 %>% 
   separate(division, c("division", "locality")) %>% 
   select(-c(year, locality)) %>% 
@@ -29,7 +33,7 @@ students2020 <- students2020 %>%
 ```
 
 ## Demographic Tables {.tabset}
-The tables below provide the demographic composition of Charlottesville and Albemarle Schools for 2021-2022, 2020-2021, and 2019-2020.
+The tables below provide the demographic composition of Charlottesville and Albemarle Schools for 2022-2023, 2021-2022, 2020-2021, and 2019-2020.
 
 These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's [Fall Membership Build-a-Table site](https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
 
@@ -39,6 +43,72 @@ According to VDOE documentation
 * Economic status "identifies students as economically disadvantaged if they meet any one of the following: 1) is eligible for Free/Reduced Meals, or 2) receives TANF, or 3) is eligible for Medicaid, or 4) identified as either Migrant or experiencing Homelessness."
 
 Scroll further right to see the percent of a school's student body by race and the number and percent of students identified as economically disadvantaged. The tables can be sorted by any column by clicking on the up/down arrow next to the column name.
+
+### 2022-2023 Academic Year
+```{r}
+reactable(students2023,
+          columns = list(
+             division = colDef(name = "Division",
+                                style = list(background = "#F4E3D3FF")),
+            school = colDef(name = "School",
+                                style = list(background = "#F4E3D3FF")),
+            students = colDef(name = "Students",
+                                style = list(background = "#F4E3D3FF")),
+            count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#C5CCD2")),
+            count_asian = colDef(name = "Asian",
+                                style = list(background = "#C5CCD2")),
+            count_black = colDef(name = "Black",
+                                style = list(background = "#C5CCD2")),
+            count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#C5CCD2")),
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#C5CCD2")),
+            count_white = colDef(name = "White",
+                                style = list(background = "#C5CCD2")),
+            count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#B4D6DB")),
+            count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#B4D6DB")),
+            perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_asian = colDef(name = "Asian",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_black = colDef(name = "Black",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_white = colDef(name = "White",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%")),
+            perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%"))),
+          columnGroups = list(
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_white")),
+            colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+            colGroup(name = "Percents by Racial/Ethnic Identity", 
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_white")),
+            colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))
+          ),
+          showSortable = TRUE, defaultPageSize = 12)
+          
+```
 
 ### 2021-2022 Academic Year
 ```{r}
