@@ -3,7 +3,7 @@ lang: "en"
 title: "Charlottesville and Albemarle School Demographics"
 author: "by Michele Claibourn, Nina Schoonover, & Elizabeth Mitchell"
 date: "March 20, 2023"
-output: 
+output:
   html_document:
     template: school-composition-template.html
     css: styles.css

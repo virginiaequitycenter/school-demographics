@@ -29,7 +29,6 @@ $endif$
 
 <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 $for(header-includes)$
 $header-includes$
@@ -186,7 +185,7 @@ $endfor$
 $if(theme)$
 <style type = "text/css">
 .main-container {
-  max-width: 940px;
+  max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -464,6 +463,9 @@ $endif$
 
 $endif$
 
+<link href="https://fonts.googleapis.com/css?family=Oswald&amp;display=swap/" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap/" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -473,8 +475,8 @@ $if(theme)$
 <div class="container-fluid">
 
 $if(theme)$
-<header id="$idprefix$header">
-<div class="module">
+<header id="$idprefix$header" class="module">
+
 $if(code_menu)$
 <div class="btn-group pull-right float-right">
 <button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
@@ -504,7 +506,7 @@ $endif$
 
 
 
-</div>
+
 
 
 
