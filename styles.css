@@ -11,7 +11,7 @@ body {
 body {
   font-family: "Poppins", Arial, sans-serif;
   font-size: 2em;
-  line-height: 1.5;
+  /* line-height: 1.5; */
   color: #333333;
   word-wrap: break-word;
 }
@@ -22,16 +22,16 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.1;
 }
 
-h1, h2, h3, h4, h5 {
+/* h1, h2, h3, h4, h5 {
   margin-top: 2.25rem;
-}
+} */
 
 .main-container h1, .main-container h2, .main-container h3, .main-container h4, .main-container h5 {
-  color: #163952;
+  color: #00416B;
 }
 
 
-h4 {
+/* h4 {
   font-size: 24px;
   padding-bottom: 1rem;
 }
@@ -39,17 +39,17 @@ h4 {
 h5 {
   font-size: 20px;
   padding-bottom: 1rem;
-}
+} */
 
 blockquote {
     padding: 11px 22px;
     margin: 0 0 22px;
     font-size: 20px;
-    border-left: 5px solid rgba(4, 157, 191, 0.75);
+    border-left: 5px solid rgba(57, 145, 209, .75);
 }
 
 a {
-  color: #0F528C;
+  color: #175785;
 }
 
 a:focus, a:hover {
@@ -57,8 +57,12 @@ a:focus, a:hover {
   text-decoration: none;
 }
 
+.nav-pills{
+  padding-top: 2rem;
+}
+
 .nav-pills li.active a, .nav-pills li.active a:focus, .nav-pills li.active a:hover {
-  background-color: #0F528C;
+  background-color: #00416B;
 }
 
 /* .tabbed-pane {
@@ -84,7 +88,7 @@ table {
   max-width: 1000px;
   margin-right: auto;
   margin-left: auto;
-  padding: 2rem;
+  padding: 2rem 0;
 }
 
 
@@ -118,11 +122,11 @@ table {
   line-height: 20px;
 }
 
-hr {
+/* hr {
     margin: 0px;
     border: 0;
     border-top: 0px;
-}
+} */
 
 .module {
    background-color: #3991D1;
@@ -145,6 +149,10 @@ hr {
   color: #FFFFFF;
   text-align: center;
  }
+
+ .logo {
+  margin-bottom: 2.5rem;
+}
 
 .title {
   font-family:"Oswald", Arial, sans-serif;
@@ -183,6 +191,7 @@ hr {
       font-size: 24px; } }
       
 .author, .date {
+  margin-top: 10px;
   font-weight: normal;
    /* line-height: 1.2; */
 }
@@ -237,7 +246,7 @@ hr {
   max-width: 1000px;
   margin-right: auto;
   margin-left: auto;
-  color: #333333;
+  /* color: #333333; */
   text-align: center;
  }
  
@@ -262,11 +271,13 @@ hr {
 
 .footer-content {
   padding: 20px 20px 0px;
-  font-weight: bold;
+  /* font-family: "Oswald", Arial, sans-serif; */
+  /* font-weight: bold; */
   font-size: 18px;
+  /* color: #00416B; */
 }
 
-.github-link {
+/* .github-link {
   font-weight: normal;
   font-size: 16px;
-}
+} */
