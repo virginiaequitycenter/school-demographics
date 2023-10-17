@@ -1,0 +1,95 @@
+---
+title: "Charlottesville and Albemarle School Demographics"
+date: "2023-10-17"
+output: html_document
+---
+
+```{css, echo=FALSE}
+.main-container.container-fluid {
+max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 4.167%;
+}
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(tidycensus)
+library(reactable)
+library(htmltools)
+library(sf)
+library(sp)
+library(tigris)
+options(tigris_use_cache = TRUE)
+library(leaflet)
+library(leaflegend)
+library(readxl)
+
+schoolmapdata2023 <- read_excel("schoolmapdata_23.xlsx")
+
+# List of desired localities by FIPS
+ccode <- read_csv("county_codes.csv")
+region <- ccode$code # list of desired counties
+# - 003 Albemarle County  
+# - 015 Augusta County
+# - 029 Buckingham County
+# - 540 Charlottesville
+# - 065 Fluvanna County
+# - 079 Greene County 
+# - 109 Louisa County
+# - 113 Madison County
+# - 125 Nelson County
+# - 137 Orange County
+# - 790 Staunton
+# - 820 Waynesboro
+
+counties_geo <- counties(state = 'VA', year = 2022) # from tigris
+counties_geo <- counties_geo %>% subset(COUNTYFP %in% region)
+
+counties_geo <- st_transform(counties_geo, 4326)
+# below variables for leaflet map boundary settings
+bbox <- st_bbox(counties_geo) %>% as.vector()
+
+```
+
+## Map
+
+
+```{r}
+districtpalette <- colorFactor(
+  palette= c("#b45248","#50a9a6","#cab2d6","#2f7e9f","#004600","#360021","#002671", "#70B13D", "#E09056", "#0000CA"),
+  domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Nelson County", "Staunton City", "Waynesboro City"))
+
+map <- leaflet() %>% 
+  leaflet(width = "100%", height = "700px") %>% 
+  addProviderTiles("CartoDB.Voyager") %>% 
+  fitBounds(bbox[1], bbox[2], bbox[3], bbox[4]) %>%
+  addMapPane('countyBoundaries', zIndex = 410) %>%
+  addPolygons(data= counties_geo, color = "#969997",
+                    fill = FALSE,
+                    weight = 2,
+                    group = 'countyBoundaries',
+                    options = pathOptions(pane = 'countyBoundaries')) %>%
+  addCircleMarkers(data = schoolmapdata2023,
+                   lng = ~schoolmapdata2023$Longitude, 
+                   lat = ~schoolmapdata2023$Latitude,
+                   radius = ~schoolmapdata2023$Total_Count*0.009, 
+                   color = ~districtpalette(schoolmapdata2023$District)
+                    )
+
+map %>% addLegendFactor(pal = districtpalette,
+                shape = "rect",
+                orientation = "vertical",
+                values = schoolmapdata2023$District,
+                naLabel = "",
+                title = "",
+                opacity = 0.8,
+                width = 20,
+                height = 10, position = "bottomleft")
+
+```
+
