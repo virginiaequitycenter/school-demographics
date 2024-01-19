@@ -1,4 +1,6 @@
-#Christopher Hu - Summer 2023 - ch7dm@virginia.edu
+#Christopher Hu - Summer 2023 
+# Updates: Nina Schoonover and Asha Muralidharan January 2024
+
 library(leaflet)
 library(leaflegend)
 library(dplyr)
@@ -6,7 +8,7 @@ library(htmltools)
 library(readxl)
 
 #Import data set: all values are percentages unless indicated by count
-schoolmapdata2023 <- read_excel("fall 2023 updates/schoolmapdata_23.xlsx")
+schoolmapdata2023 <- read_csv("data/schoolmapdata_23.csv")
 View(schoolmapdata2023) 
 schoolmapdata2023$Disadvantaged <- round(schoolmapdata2023$Disadvantaged, 1)
 schoolmapdata2023$Asian <- round(schoolmapdata2023$Asian, 1)

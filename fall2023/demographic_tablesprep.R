@@ -1,7 +1,7 @@
-#Nina Schoonover -- November 2023
+#Nina Schoonover -- January 2023
 
 # updating school demographics tables to include race, economically disadvantaged, and english learners
-# adding all local districts: albemarle, augusta, buckingha,, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro) 
+# adding all local districts: albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro) 
 
 #Load packages
 library(tidyverse)
@@ -12,7 +12,7 @@ library(janitor)
 # Query parameters: race.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, charlottesville, greene, louisa, buckingham, augusta, waynesboro, staunton, fluvanna, nelson
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
 #   schools = all schools
 #   race = [all individual races]
 #   grades = all grades (aggregated, not individual grades)
@@ -21,7 +21,7 @@ library(janitor)
 # Query parameters: district_race.csv
 #   school years = 2023-2024
 #   report level = division
-#   divisions = albemarle, charlottesville, greene, louisa, buckingham, augusta, waynesboro, staunton, fluvanna
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
 #   race = [all individual races]
 #   grades = all grades (aggregated, not individual grades)
 #   [everything else] = all students
@@ -29,7 +29,7 @@ library(janitor)
 # Query parameters: disadvantaged.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, charlottesville, greene, louisa, buckingham, augusta, waynesboro, staunton, fluvanna
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
 #   schools = all schools
 #   race = all races (aggregated, not individual categories)
 #   grades = all grades (aggregated, not individual grades)
@@ -39,7 +39,7 @@ library(janitor)
 # Query parameters: englishlearner.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, charlottesville, greene, louisa, buckingham, augusta, waynesboro, staunton, fluvanna
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
 #   schools = all schools
 #   race = all races (aggregated, not individual categories)
 #   grades = all grades (aggregated, not individual grades)
@@ -49,22 +49,22 @@ library(janitor)
 #set working directory
 
 # read data ----
-race_ethn <- read_csv("race.csv") %>% 
+race_ethn <- read_csv("data/race.csv") %>% 
   clean_names() %>% 
   select(-c(division_number, school_number,full_time_count_all_grades, part_time_count_all_grades)) %>% 
     rename(count = total_count, school = school_name, division = division_name)
 
-disadvant <- read_csv("disadvantaged.csv") %>% 
+disadvant <- read_csv("data/disadvantaged.csv") %>% 
   clean_names() %>% 
   select(-c(division_number, school_number, full_time_count_all_grades, part_time_count_all_grades)) %>% 
     rename(count = total_count, school = school_name, division = division_name)
 
-el <- read_csv("englishlearner.csv") %>% 
+el <- read_csv("data/englishlearner.csv") %>% 
   clean_names() %>% 
   select(-c(division_number, school_number, full_time_count_all_grades, part_time_count_all_grades)) %>% 
     rename(count = total_count, school = school_name, division = division_name)
 
-districtbyrace <- read_csv("district_race.csv") %>% 
+districtbyrace <- read_csv("data/district_race.csv") %>% 
   clean_names() %>% 
   select(-c(division_number, full_time_count_all_grades, part_time_count_all_grades)) %>% 
    rename(count = total_count, division = division_name)
