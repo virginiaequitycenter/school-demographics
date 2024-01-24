@@ -6,6 +6,9 @@ library(leaflegend)
 library(dplyr)
 library(htmltools)
 library(readxl)
+library(readr)
+library(leafpop)
+library(htmlTable)
 
 #Import data set: all values are percentages unless indicated by count
 schoolmapdata2023 <- read_csv("data/schoolmapdata_23.csv")
@@ -20,6 +23,8 @@ schoolmapdata2023$EL <- round(schoolmapdata2023$EL, 1)
 schoolmapdata2023$D_Disadvantaged <- round(schoolmapdata2023$D_Disadvantaged, 1)
 schoolmapdata2023$D_EL <- round(schoolmapdata2023$D_EL, 1)
 
+schoolmapdata2023 <- schoolmapdata2023[-89,]
+
 #Let's make a map
 
 #Setting the colors 
@@ -30,24 +35,26 @@ map <- leaflet(schoolmapdata2023) %>% addProviderTiles(providers$CartoDB) %>%
   setView(lng = -78.507, lat = 38.0322, zoom = 10) %>%
   addCircleMarkers (lng = ~schoolmapdata2023$Longitude, lat = ~schoolmapdata2023$Latitude,
                     radius = ~schoolmapdata2023$Total_Count*0.009, color = ~districtpalette(schoolmapdata2023$District),
-                    label = paste("<strong>School:</strong>", schoolmapdata2023$School, "&nbsp;&nbsp;&nbsp;&nbsp;[", schoolmapdata2023$District, "]", 
-                                  "<br><strong>Total</strong> =", schoolmapdata2023$Total_Count, "students","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", schoolmapdata2023$D_Total_Count, "students ]",
-                                  "<br><strong>White</strong> =", sprintf("%.1f", schoolmapdata2023$White), "% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_White), "% ]",
-                                  "<br><strong>Black</strong> =", sprintf("%.1f", schoolmapdata2023$Black),"% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_Black), "% ]",
-                                  "<br><strong>Hispanic</strong> =", sprintf("%.1f", schoolmapdata2023$Hispanic),"% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_Hispanic), "% ]",
-                                  "<br><strong>Asian</strong> =", sprintf("%.1f", schoolmapdata2023$Asian),"% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_Asian), "% ]",
-                                  "<br><strong>Multiracial</strong> =", sprintf("%.1f", schoolmapdata2023$Multiracial),"% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_Multiracial), "% ]",
-                                  "<br><strong>Econ. Disadvantaged</strong> =", sprintf("%.1f", schoolmapdata2023$Disadvantaged),"% &nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_Disadvantaged), "% ]",
-                                  "<br><strong>English Learners</strong> =", sprintf("%.1f", schoolmapdata2023$EL), "% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[", sprintf("%.1f", schoolmapdata2023$D_EL), "% ]")
+                    label = paste0("<table style=\"border: 1px solid black\" rules=all >","<tr><th></th><th style=text-align:center>",schoolmapdata2023$School," </th><th style=text-align:center> ",schoolmapdata2023$District,"</th></tr>",
+                                   "<tr><th style=text-align:left>Total Count </th><td style=text-align:center>",schoolmapdata2023$Total_Count," </td><td style=text-align:center>",schoolmapdata2023$D_Total_Count,"</td></tr>",
+                                   "<tr><th style=text-align:left>White </th><td style=text-align:center>",schoolmapdata2023$White,"%</td><td style=text-align:center>",schoolmapdata2023$D_White,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Black </th><td style=text-align:center>",schoolmapdata2023$Black,"%</td><td style=text-align:center>",schoolmapdata2023$D_Black,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Hispanic </th><td style=text-align:center>",schoolmapdata2023$Hispanic,"%</td><td style=text-align:center>",schoolmapdata2023$D_Hispanic,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Asian </th><td style=text-align:center>",schoolmapdata2023$Asian,"%</td><td style=text-align:center>",schoolmapdata2023$D_Asian,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Multiracial </th><td style=text-align:center>",schoolmapdata2023$Multiracial,"%</td><td style=text-align:center>",schoolmapdata2023$D_Multiracial,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Econ. Disadvantaged </th><td style=text-align:center>",schoolmapdata2023$Disadvantaged,"%</td><td style=text-align:center>",schoolmapdata2023$D_Disadvantaged,"%</td></tr>",
+                                   "<tr><th style=text-align:left>English Learners </th><td style=text-align:center>",schoolmapdata2023$EL,"%</td><td style=text-align:center>",schoolmapdata2023$D_EL,"%</td></tr>",
+                                   "</table>") 
                     %>% lapply(htmltools::HTML), 
                     labelOptions = labelOptions(noHide = F, style = list("font-family" = "Arial", "font-size" = "14px")))
 
 map %>% addLegendFactor(pal = districtpalette,
-                shape = "rect",
-                orientation = "vertical",
-                values = schoolmapdata2023$District,
-                naLabel = "",
-                title = "",
-                opacity = 0.8,
-                width = 20,
-                height = 10, position = "bottomleft")
+                        shape = "rect",
+                        orientation = "vertical",
+                        values = schoolmapdata2023$District,
+                        naLabel = "",
+                        title = "",
+                        opacity = 0.8,
+                        width = 20,
+                        height = 10, position = "bottomleft")
+
