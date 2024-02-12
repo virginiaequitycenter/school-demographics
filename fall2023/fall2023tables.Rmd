@@ -16,7 +16,35 @@ max-width: 1200px;
   padding: 0 4.167%;
 }
 ```
+## Demographic Map {.tabset}
 
+The map below provides the details of the demographic composition of all schools in the school districts in the greater Charlottesville region:
+
+* Albemarle County Public Schools
+* Augusta County Public Schools
+* Buckingham County Public Schools
+* Charlottesville City Schools
+* Fluvanna County Public Schools
+* Greene County Public Schools
+* Louisa County Public Schools
+* Madison County Public Schools
+* Nelson County Public Schools
+* Orange County Public Schools
+* Staunton City Schools 
+* Waynesboro City Schools
+
+According to **Virginia Department of Education (VDOE)** documentation:
+
+* Race or Ethnicity captures "the racial category that most closely reflects the student’s recognition of his or her community or with which the student identifies"
+
+* Economic status "identifies students as economically disadvantaged if they meet any one of the following: 1) is eligible for Free/Reduced Meals, or 2) receives TANF, or 3) is eligible for Medicaid, or 4) identified as either Migrant or experiencing Homelessness."
+
+* English Learner identifies students who "1) are not born in the United States or whose native language is a language other than English, 2) are Native American or Alaska Native, or a native resident of the outlying areas, 3) come from an environment where a language other than English has had a significant impact on the individual’s level of English language proficiency, 4) are migratory, whose native language is a language other than English, and who comes from an environment where a language other than English is dominant, and whose difficulties in speaking, reading, writing, or understanding the English language may be sufficient to deny the individual—
+* the ability to meet the challenging State academic standards;
+* the ability to successfully achieve in classrooms where the language of instruction is English; or
+* the opportunity to participate fully in society."
+
+These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's Fall Membership Build-a-Table site (https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
@@ -242,20 +270,8 @@ The tables below provide the details of the demographic composition of all schoo
 * Staunton City Schools 
 * Waynesboro City Schools
 
-According to **Virginia Department of Education (VDOE)** documentation:
-
-* Race or Ethnicity captures "the racial category that most closely reflects the student’s recognition of his or her community or with which the student identifies"
-
-* Economic status "identifies students as economically disadvantaged if they meet any one of the following: 1) is eligible for Free/Reduced Meals, or 2) receives TANF, or 3) is eligible for Medicaid, or 4) identified as either Migrant or experiencing Homelessness."
-
-* English Learner identifies students who "1) are not born in the United States or whose native language is a language other than English, 2) are Native American or Alaska Native, or a native resident of the outlying areas, 3) come from an environment where a language other than English has had a significant impact on the individual’s level of English language proficiency, 4) are migratory, whose native language is a language other than English, and who comes from an environment where a language other than English is dominant, and whose difficulties in speaking, reading, writing, or understanding the English language may be sufficient to deny the individual—
-* the ability to meet the challenging State academic standards;
-* the ability to successfully achieve in classrooms where the language of instruction is English; or
-* the opportunity to participate fully in society."
-
 Scroll down to see tables with counts and percents by school for by race or ethnicity, economic status, or English learner status. The tables can be sorted by any column by clicking on the up/down arrow next to the column name or by typing in school district name or school name. 
 
-These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's Fall Membership Build-a-Table site (https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
 
 ### 2023-2024 School Year
 ```{r}
@@ -268,39 +284,39 @@ reactable(students2024race, filterable = TRUE, minRows = 10,
               students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#E9F0FC"), filterable = FALSE),
               count_aian = colDef(name = "Am. Indian AK Native",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_asian = colDef(name = "Asian",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_black = colDef(name = "Black",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_latinx = colDef(name = "Hispanic",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_nhpi = colDef(name = "Native HI Pacific Islander",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_white = colDef(name = "White",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               count_multiracial = colDef(name = "Multiracial",
-                                style = list(background = "#cab2d6"), filterable = FALSE),
+                                style = list(background = "#D8F2E4"), filterable = FALSE),
               perc_aian = colDef(name = "Am. Indian AK Native",
-                               style = list(background = "#cab2d6"),
+                               style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_asian = colDef(name = "Asian",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_black = colDef(name = "Black",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_latinx = colDef(name = "Hispanic",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_nhpi = colDef(name = "Native HI Pacific Islander",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_white = colDef(name = "White",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_multiracial = colDef(name = "Multiracial",
-                                style = list(background = "#cab2d6"),
+                                style = list(background = "#D8F2E4"),
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
 columnGroups = list(
             colGroup(name = "Total", 
@@ -322,14 +338,14 @@ reactable(students2024disadvantaged, filterable = TRUE, minRows = 10,
                students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#E9F0FC"), filterable = FALSE),    
                count_adv = colDef(name = "Advantaged",
-                                style = list(background = "#D55E00"), filterable = FALSE),
+                                style = list(background = "#FAE2B8"), filterable = FALSE),
                 count_disadv = colDef(name = "Disadvantaged",
-                                style = list(background = "#D55E00"), filterable = FALSE),
+                                style = list(background = "#FAE2B8"), filterable = FALSE),
                 perc_adv = colDef(name = "Advantaged",
-                                style = list(background = "#D55E00"),
+                                style = list(background = "#FAE2B8"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
                 perc_disadv = colDef(name = "Disadvantaged",
-                                style = list(background = "#D55E00"),
+                                style = list(background = "#FAE2B8"),
                                format = colFormat(suffix = "%"), filterable = FALSE)),
             columnGroups = list(
                 colGroup(name = "Total", 
@@ -350,14 +366,14 @@ reactable(students2024el, filterable = TRUE, minRows = 10,
                 students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#E9F0FC"), filterable = FALSE),    
                 count_nonel = colDef(name = "Non English Learner",
-                                style = list(background = "#CC79A7"), filterable = FALSE),
+                                style = list(background = "#FBFDC3"), filterable = FALSE),
                 count_el = colDef(name = "English Learner",
-                              style = list(background = "#CC79A7"), filterable = FALSE),
+                              style = list(background = "#FBFDC3"), filterable = FALSE),
                 perc_nonel = colDef(name = "Non English Learner",
-                                style = list(background = "#CC79A7"),
+                                style = list(background = "#FBFDC3"),
                                 format = colFormat(suffix = "%"), filterable = FALSE),
                 perc_el = colDef(name = "English Learner",
-                                style = list(background = "#CC79A7"),
+                                style = list(background = "#FBFDC3"),
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
         columnGroups = list(
             colGroup(name = "Total", 

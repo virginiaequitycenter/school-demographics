@@ -1,7 +1,7 @@
 #Nina Schoonover -- January 2023
 
 # updating school demographics tables to include race, economically disadvantaged, and english learners
-# adding all local districts: albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro) 
+# adding all local districts: albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro) 
 
 #Load packages
 library(tidyverse)
@@ -12,16 +12,8 @@ library(janitor)
 # Query parameters: race.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
 #   schools = all schools
-#   race = [all individual races]
-#   grades = all grades (aggregated, not individual grades)
-#   [everything else] = all students
-#
-# Query parameters: district_race.csv
-#   school years = 2023-2024
-#   report level = division
-#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
 #   race = [all individual races]
 #   grades = all grades (aggregated, not individual grades)
 #   [everything else] = all students
@@ -29,7 +21,7 @@ library(janitor)
 # Query parameters: disadvantaged.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
 #   schools = all schools
 #   race = all races (aggregated, not individual categories)
 #   grades = all grades (aggregated, not individual grades)
@@ -39,8 +31,36 @@ library(janitor)
 # Query parameters: englishlearner.csv
 #   school years = 2023-2024
 #   report level = school
-#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, nelson, staunton, waynesboro
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange staunton, waynesboro
 #   schools = all schools
+#   race = all races (aggregated, not individual categories)
+#   grades = all grades (aggregated, not individual grades)
+#   english learner = yes, no [former EL not selected]
+#   [everything else] = all students
+
+# Build tables for total students by race, disadvantaged, and english learner across district for comparison
+
+# Query parameters: district_race.csv
+#   school years = 2023-2024
+#   report level = division
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
+#   race = [all individual races]
+#   grades = all grades (aggregated, not individual grades)
+#   [everything else] = all students
+
+#Query parameters: district_disadvantaged.csv
+#   school years = 2023-2024
+#   report level = division
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
+#   race = all races (aggregated, not individual categories)
+#   grades = all grades (aggregated, not individual grades)
+#   disadvantaged = yes, no
+#   [everything else] = all students
+
+#Query parameters: district_englishlearner.csv
+#   school years = 2023-2024
+#   report level = division
+#   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
 #   race = all races (aggregated, not individual categories)
 #   grades = all grades (aggregated, not individual grades)
 #   english learner = yes, no [former EL not selected]
@@ -123,11 +143,18 @@ names(el) <- c("year", "division", "school", "students",
 
 # combine tables and save 
 
+students2024race <- race_ethn
+
+students2024el <- el
+
+students2024disadvantaged <- disadvant
+
 students2024 <- left_join(race_ethn, disadvant, by = c("year", "division", "school")) %>% 
   left_join(., el, by=c("year", "division", "school")) %>%  
   select(-c("students.y", "students.x"))
 
 
-save(students2024, file = "2024demographictables.Rdata")
-
+save(students2024race, file = "2024demographictablesrace.Rdata")
+save(students2024el, file = "2024demographictablesel.Rdata")
+save(students2024disadvantaged, file = "2024demographictablesdisadvantaged.Rdata")
 
