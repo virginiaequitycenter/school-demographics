@@ -35,6 +35,10 @@ library(tibble)
 ######################################################
 View(students2024)
 # Rename columns to match 
+
+schoolmapdata2023 <- read_csv("data/schoolmapdata_23.csv")
+save(schoolmapdata2023, file = "2023schoolmap.Rdata")
+
 schoolmapdata2024 <- students2024
 
 colnames(schoolmapdata2024) <- c("Year","District","School","Indigenous_Count","Asian_Count","Black_Count","Hispanic_Count","Multiracial_Count",
@@ -194,6 +198,7 @@ map <- leaflet(schoolmapdata2024) %>%
   addLegend("bottomleft", pal=districtpalette, values = schoolmapdata2024$District,title = "",opacity = 0.8) 
   
 
-map 
+save(schoolmapdata2024, file = "2024schoolmap.Rdata")
+
 
 
