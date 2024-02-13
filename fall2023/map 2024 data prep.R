@@ -82,8 +82,8 @@ students2024 <- merge(x=students2024, y=latlong, all.x=TRUE)
 
 #Add in latlongs that aren't included
 
-students2024 <- students2024 %>% mutate(Latitude=ifelse(School=="Ivy Elementary",38.074917,Latitude))
-students2024 <- students2024 %>% mutate(Longitude=ifelse(School=="Ivy Elementary",-78.507056,Longitude))
+students2024 <- students2024 %>% mutate(Latitude=ifelse(School=="Ivy Elementary",38.0812,Latitude))
+students2024 <- students2024 %>% mutate(Longitude=ifelse(School=="Ivy Elementary",-78.5981,Longitude))
 
 students2024 <- students2024 %>% mutate(Latitude=ifelse(School=="Madison County High",38.364594,Latitude))
 students2024 <- students2024 %>% mutate(Longitude=ifelse(School=="Madison County High",-78.268496,Longitude))
