@@ -35,9 +35,9 @@ va_counties <- va_counties %>% st_transform("+init=epsg:4326")
 districtpalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"),
                                domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County", "Orange County","Staunton City", "Waynesboro City"))
 
-shape_hs <- st_read(dsn="School Boundary Files 201516/SABS_1516_VA_CvilleRegion_High.shp") 
-shape_ms <- st_read(dsn="School Boundary Files 201516/SABS_1516_VA_CvilleRegion_Middle.shp")
-shape_ps <- st_read(dsn="School Boundary Files 201516/SABS_1516_VA_CvilleRegion_Primary.shp")
+shape_hs <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_High.shp") 
+shape_ms <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_Middle.shp")
+shape_ps <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_Primary.shp")
 
 
 incl_lea <- c("5100090","5100300","5100540","5100780","5101380","5101710","5102280","5102580","5103690","5103930","5102820")
@@ -89,7 +89,6 @@ map <- leaflet(students2024) %>%
   
 map
 
-save(students2024, file = "2024schoolmap.Rdata")
 
 
 
