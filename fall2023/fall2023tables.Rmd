@@ -7,7 +7,7 @@ output:
     css: styles.css
 ---
 
-The data below provide the details of the 2023-24 demographic composition of all schools in the following school districts in the greater Charlottesville region:
+The data below provides the details of the 2023-24 demographic composition of all public schools in the following school districts in the greater Charlottesville region:
 
 * Albemarle County Public Schools
 * Augusta County Public Schools
@@ -105,7 +105,7 @@ shape_ps <- shape_ps %>% st_transform("+init=epsg:4326")
 
 ## School Attendance Boundaries Map {.tabset}
 
-The following map details the demographic breakdowns (by Race or Ethnicity, Economic Status, and English Learner Status) of schools in the Charlottesville region for the 2023-24 academic year. Circle size is indicative of the number of students attending a given school. Hover over a circle to pull up the comparison of demographics between a school and its enveloping district. 
+The following map details the demographic breakdowns (by Race or Ethnicity, Economic Status, and English Learner Status) of schools in the Charlottesville region for the 2023-24 academic year. Circle size is indicative of the number of students attending a given school. Hover over a circle to pull up the comparison of demographics between a school and its enveloping district. Use the menu in the upper right corner to see the school boundaries for elementary, middle, and high schools in a given district. School boundary data reflects information gathered by the National Center for Education Statistics in the School Attendance Boundary Survey (SABS) for the 2015-16 academic year, found here: https://nces.ed.gov/programs/edge/sabs. 
 
 ```{r}
 leaflet(students2024) %>% 
@@ -179,39 +179,39 @@ reactable(students2024race, filterable = TRUE, minRows = 10,
               students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#e3f1fe"), filterable = FALSE),
               count_aian = colDef(name = "Am. Indian AK Native",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_asian = colDef(name = "Asian",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_black = colDef(name = "Black",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_latinx = colDef(name = "Hispanic",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_nhpi = colDef(name = "Native HI Pacific Islander",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_white = colDef(name = "White",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               count_multiracial = colDef(name = "Multiracial",
-                                style = list(background = "#e6dbff"), filterable = FALSE),
+                                style = list(background = "#f1ebff"), filterable = FALSE),
               perc_aian = colDef(name = "Am. Indian AK Native",
-                               style = list(background = "#d7c5fe"),
+                               style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_asian = colDef(name = "Asian",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_black = colDef(name = "Black",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_latinx = colDef(name = "Hispanic",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_nhpi = colDef(name = "Native HI Pacific Islander",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_white = colDef(name = "White",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
               perc_multiracial = colDef(name = "Multiracial",
-                                style = list(background = "#d7c5fe"),
+                                style = list(background = "#e6dbff"),
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
 columnGroups = list(
             colGroup(name = "Total", 
@@ -233,14 +233,14 @@ reactable(students2024disadvantaged, filterable = TRUE, minRows = 10,
                students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#e3f1fe"), filterable = FALSE),    
                count_adv = colDef(name = "Advantaged",
-                                style = list(background = "#ffd4c4"), filterable = FALSE),
+                                style = list(background = "#feeae3"), filterable = FALSE),
                 count_disadv = colDef(name = "Disadvantaged",
-                                style = list(background = "#ffd4c4"), filterable = FALSE),
+                                style = list(background = "#feeae3"), filterable = FALSE),
                 perc_adv = colDef(name = "Advantaged",
-                                style = list(background = "#ffbba1"),
+                                style = list(background = "#ffd4c4"),
                                format = colFormat(suffix = "%"), filterable = FALSE),
                 perc_disadv = colDef(name = "Disadvantaged",
-                                style = list(background = "#ffbba1"),
+                                style = list(background = "#ffd4c4"),
                                format = colFormat(suffix = "%"), filterable = FALSE)),
             columnGroups = list(
                 colGroup(name = "Total", 
@@ -261,14 +261,14 @@ reactable(students2024el, filterable = TRUE, minRows = 10,
                 students = colDef(name = "Students", sticky = "left",
                                 style = list(background = "#e3f1fe"), filterable = FALSE),    
                 count_nonel = colDef(name = "Non English Learner",
-                                style = list(background = "#ffd2da"), filterable = FALSE),
+                                style = list(background = "#fce9ec"), filterable = FALSE),
                 count_el = colDef(name = "English Learner",
-                              style = list(background = "#ffd2da"), filterable = FALSE),
+                              style = list(background = "#fce9ec"), filterable = FALSE),
                 perc_nonel = colDef(name = "Non English Learner",
-                                style = list(background = "#ffb7c5"),
+                                style = list(background = "#ffd2da"),
                                 format = colFormat(suffix = "%"), filterable = FALSE),
                 perc_el = colDef(name = "English Learner",
-                                style = list(background = "#ffb7c5"),
+                                style = list(background = "#ffd2da"),
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
         columnGroups = list(
             colGroup(name = "Total", 
@@ -286,4 +286,4 @@ To see previous years' demographics data for public schools in the Charlottesvil
 
 ## Citation {.tabset}
 
-Elizabeth Mitchell, Asha Muralidharan, and NIna Schoonover. February 2024. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
+Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2024. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
