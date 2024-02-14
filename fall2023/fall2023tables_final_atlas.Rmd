@@ -1,0 +1,408 @@
+---
+title: "Local School Demographics"
+date: "Last Updated: February 2024"
+output: 
+  html_document:
+    template: atlas-rmd-template.html
+---
+```{css, echo=FALSE}
+div.leaflet-popup-content tbody, 
+div.leaflet-popup-content td,
+div.leaflet-popup-content tfoot,
+div.leaflet-popup-content th,
+div.leaflet-popup-content thead,
+div.leaflet-popup-content tr {
+  border-width: 1px;
+}
+
+.reactable {
+  color: #212529;
+}
+
+.rt-td {
+  border-left-color: rgba(0,0,0,0) !important;
+  border-left-width: 1px;
+  border-top: 1px solid #ffffff !important;
+}
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(reactable)
+library(leaflet)
+library(htmltools)
+library(sf)
+library(tigris)
+
+# Load School Data
+load("2024schoolmap.Rdata")
+
+# Load geographies
+va_counties <- counties(state="VA", cb=FALSE)
+va_counties <- va_counties %>% mutate(NAMELSAD= ifelse(NAMELSAD=="Charlottesville city", "Charlottesville City", NAMELSAD))
+va_counties <- va_counties %>% mutate(NAMELSAD= ifelse(NAMELSAD=="Staunton city", "Staunton City", NAMELSAD))
+va_counties <- va_counties %>% mutate(NAMELSAD= ifelse(NAMELSAD=="Waynesboro city", "Waynesboro City", NAMELSAD))
+va_counties <- va_counties %>% subset(NAMELSAD %in% c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County","Orange County", "Staunton City", "Waynesboro City"))
+va_counties <- va_counties %>% st_transform("+init=epsg:4326")
+
+# set map bounding box
+bbox <- st_bbox(va_counties$geometry) %>% as.vector()
+
+#Let's make a map
+
+#Setting the colors 
+districtpalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"),
+                               domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County", "Orange County","Staunton City", "Waynesboro City"))
+
+shape_hs <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_High.shp") 
+shape_ms <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_Middle.shp")
+shape_ps <- st_read(dsn="SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_Primary.shp")
+
+
+incl_lea <- c("5100090","5100300","5100540","5100780","5101380","5101710","5102280","5102580","5103690","5103930","5102820")
+leapalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"),
+                               domain = c("5100090","5100300","5100540","5100780","5101380","5101710","5102280","5102580","5103690","5103930","5102820","5102370"))
+
+shape_hs <- shape_hs %>% subset(stAbbrev=="VA")
+shape_hs <- shape_hs %>% subset(leaid %in% incl_lea)
+shape_hs <- shape_hs %>% st_transform("+init=epsg:4326")
+
+shape_ms <- shape_ms %>% subset(stAbbrev=="VA")
+shape_ms <- shape_ms %>% subset(leaid %in% incl_lea)
+shape_ms <- shape_ms %>% st_transform("+init=epsg:4326")
+
+shape_ps <- shape_ps %>% subset(stAbbrev=="VA")
+shape_ps <- shape_ps %>% subset(leaid %in% incl_lea)
+shape_ps <- shape_ps %>% st_transform("+init=epsg:4326")
+
+# High Schools
+students_2024_hs <- students2024 %>% 
+  filter(str_detect(School, 'High'))
+
+# All other schools
+students_2024_elem_mid <- students2024 %>% 
+  filter(!str_detect(School, 'High'))
+
+```
+
+The data below provides the details of the 2023-24 demographic composition of all public schools in the following school districts in the greater Charlottesville region:
+
+* Albemarle County Public Schools
+* Augusta County Public Schools
+* Buckingham County Public Schools
+* Charlottesville City Schools
+* Fluvanna County Public Schools
+* Greene County Public Schools
+* Louisa County Public Schools
+* Madison County Public Schools
+* Nelson County Public Schools
+* Orange County Public Schools
+* Staunton City Schools 
+* Waynesboro City Schools
+
+According to **Virginia Department of Education (VDOE)** documentation:
+
+* **Race or Ethnicity** captures "the racial category that most closely reflects the student’s recognition of his or her community or with which the student identifies"
+
+* **Economic status** "identifies students as economically disadvantaged if they meet any one of the following: 1) is eligible for Free/Reduced Meals, or 2) receives TANF, or 3) is eligible for Medicaid, or 4) identified as either Migrant or experiencing Homelessness."
+
+* **English Learner** identifies students who "1) are not born in the United States or whose native language is a language other than English, 2) are Native American or Alaska Native, or a native resident of the outlying areas, 3) come from an environment where a language other than English has had a significant impact on the individual’s level of English language proficiency, 4) are migratory, whose native language is a language other than English, and who comes from an environment where a language other than English is dominant, and whose difficulties in speaking, reading, writing, or understanding the English language may be sufficient to deny the individual—
+    * the ability to meet the challenging State academic standards;
+    * the ability to successfully achieve in classrooms where the language of instruction is English; or
+    * the opportunity to participate fully in society."
+
+These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's [Fall Membership Build-a-Table site](https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
+
+## School Attendance Boundaries Map
+
+The following map details the demographic breakdowns (by Race or Ethnicity, Economic Status, and English Learner Status) of schools in the Charlottesville region for the 2023-24 academic year. 
+
+Circle size is indicative of the number of students attending a given school. Click on a circle to pull up the comparison of demographics between a school and its enveloping district. Use the menu in the upper right corner to see the school boundaries for elementary, middle, and high schools in a given district. 
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+## school district map
+
+leaflet() %>% 
+  leaflet(width = "100%", height = "75vh") %>%
+  fitBounds(bbox[1], bbox[2], bbox[3], bbox[4]) %>%
+  addProviderTiles(providers$CartoDB) %>%
+  addMapPane(name = "boundaries", zIndex = 410)  %>% 
+  addMapPane(name = "school_circ", zIndex = 420) %>%
+  addPolygons(data=va_counties, 
+              color=districtpalette(va_counties$NAMELSAD), 
+              weight=3, 
+              fillOpacity=0.1) %>%
+  addPolygons(data=shape_ps, 
+              color = ~leapalette(shape_ps$leaid),
+              fill = FALSE, 
+              weight=2, 
+              group= "Elementary School Boundaries",
+              options = leafletOptions(pane = "boundaries")) %>%
+  addPolygons(data=shape_ms, 
+              color = ~leapalette(shape_ms$leaid),
+              fill = FALSE, 
+              weight=2, 
+              group= "Middle School Boundaries",
+              options = leafletOptions(pane = "boundaries")) %>%
+  addPolygons(data=shape_hs, 
+              color = ~leapalette(shape_hs$leaid),
+              fill = FALSE, 
+              weight=2, 
+              group= "High School Boundaries",
+              options = leafletOptions(pane = "boundaries")) %>%
+  addCircleMarkers(data = students_2024_hs,
+             lng = ~students_2024_hs$Longitude,
+             lat = ~students_2024_hs$Latitude,
+             group="High Schools",
+             radius = ~students_2024_hs$Total_Count*0.01,
+             color = ~districtpalette(students_2024_hs$District),
+             weight = 1,
+             fillOpacity = 0.4,
+             label = paste0("<div>",students_2024_hs$School,"<br /><small>Click for details</small></div>")%>%
+                     lapply(htmltools::HTML),
+             popup = paste0("<table style=\"border: 1px solid black\" rules=all >","<tr><th></th><th style=text-align:center>",students_2024_hs$School," </th><th style=text-align:center> ",students_2024_hs$District,"</th></tr>",
+                                   "<tr><th style=text-align:left>Total Count </th><td style=text-align:center>",students_2024_hs$Total_Count," </td><td style=text-align:center>",students_2024_hs$D_Total_Count,"</td></tr>",
+                                   "<tr><th style=text-align:left>White </th><td style=text-align:center>",students_2024_hs$White,"%</td><td style=text-align:center>",students_2024_hs$D_White,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Black </th><td style=text-align:center>",students_2024_hs$Black,"%</td><td style=text-align:center>",students_2024_hs$D_Black,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Hispanic </th><td style=text-align:center>",students_2024_hs$Hispanic,"%</td><td style=text-align:center>",students_2024_hs$D_Hispanic,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Asian </th><td style=text-align:center>",students_2024_hs$Asian,"%</td><td style=text-align:center>",students_2024_hs$D_Asian,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Multiracial </th><td style=text-align:center>",students_2024_hs$Multiracial,"%</td><td style=text-align:center>",students_2024_hs$D_Multiracial,"%</td></tr>",
+                                  "<tr><th style=text-align:left>Econ. Disadvantaged </th><td style=text-align:center>",students_2024_hs$Disadvantaged,"%</td><td style=text-align:center>",students_2024_hs$D_Disadvantaged,"%</td></tr>",
+                                   "<tr><th style=text-align:left>English Learners </th><td style=text-align:center>",students_2024_hs$EL,"%</td><td style=text-align:center>",students_2024_hs$D_EL,"%</td></tr>",
+                                   "</table>") %>%
+                     lapply(htmltools::HTML),
+             labelOptions = labelOptions(noHide = F, style = list("font-family" = "Arial", "font-size" = "12px")),
+             options = leafletOptions(pane = "school_circ")) %>%
+  addCircleMarkers(data = students_2024_elem_mid,
+             lng = ~students_2024_elem_mid$Longitude,
+             lat = ~students_2024_elem_mid$Latitude,
+             group="Pre-K, Elementary & Middle Schools",
+             radius = ~students_2024_elem_mid$Total_Count*0.01,
+             color = ~districtpalette(students_2024_elem_mid$District),
+             weight = 1,
+             fillOpacity = 0.4,
+             label = paste0("<div>",students_2024_elem_mid$School,"<br /><small>Click for details</small></div>")%>%
+                     lapply(htmltools::HTML),
+             popup = paste0("<table style=\"border: 1px solid black\" rules=all >","<tr><th></th><th style=text-align:center>",students_2024_elem_mid$School," </th><th style=text-align:center> ",students_2024_elem_mid$District,"</th></tr>",
+                                   "<tr><th style=text-align:left>Total Count </th><td style=text-align:center>",students_2024_elem_mid$Total_Count," </td><td style=text-align:center>",students_2024_elem_mid$D_Total_Count,"</td></tr>",
+                                   "<tr><th style=text-align:left>White </th><td style=text-align:center>",students_2024_elem_mid$White,"%</td><td style=text-align:center>",students_2024_elem_mid$D_White,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Black </th><td style=text-align:center>",students_2024_elem_mid$Black,"%</td><td style=text-align:center>",students_2024_elem_mid$D_Black,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Hispanic </th><td style=text-align:center>",students_2024_elem_mid$Hispanic,"%</td><td style=text-align:center>",students_2024_elem_mid$D_Hispanic,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Asian </th><td style=text-align:center>",students_2024_elem_mid$Asian,"%</td><td style=text-align:center>",students2024$D_Asian,"%</td></tr>",
+                                   "<tr><th style=text-align:left>Multiracial </th><td style=text-align:center>",students_2024_elem_mid$Multiracial,"%</td><td style=text-align:center>",students_2024_elem_mid$D_Multiracial,"%</td></tr>",
+                                  "<tr><th style=text-align:left>Econ. Disadvantaged </th><td style=text-align:center>",students_2024_elem_mid$Disadvantaged,"%</td><td style=text-align:center>",students_2024_elem_mid$D_Disadvantaged,"%</td></tr>",
+                                   "<tr><th style=text-align:left>English Learners </th><td style=text-align:center>",students_2024_elem_mid$EL,"%</td><td style=text-align:center>",students2024$D_EL,"%</td></tr>",
+                                   "</table>") %>%
+                     lapply(htmltools::HTML),
+             labelOptions = labelOptions(noHide = F, style = list("font-family" = "Arial", "font-size" = "12px")),
+             options = leafletOptions(pane = "school_circ")) %>%
+  addLayersControl(overlayGroups = c("Pre-K, Elementary & Middle Schools", "High Schools", "Elementary School Boundaries", "Middle School Boundaries","High School Boundaries"),
+                   options = layersControlOptions(collapsed = FALSE)) %>%
+  hideGroup("Elementary School Boundaries") %>%
+  hideGroup("Middle School Boundaries") %>%
+  hideGroup("High School Boundaries") %>%
+  addLegend("bottomleft", 
+            pal=districtpalette, 
+            values = students2024$District,
+            title = "Localities",
+            opacity = 0.6) %>% 
+  addEasyButton(
+        easyButton(
+          icon = "ion-arrow-expand",
+          title = "Reset View", 
+          onClick = JS("function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }")
+        )
+      ) %>% 
+      htmlwidgets::onRender(
+        JS(
+          "function(el, x){ 
+            var map = this; 
+            map.whenReady(function(){
+              map._initialCenter = map.getCenter(); 
+              map._initialZoom = map.getZoom();
+            });
+          }"
+        )
+      )
+  
+```
+
+School boundary data reflects information gathered by the National Center for Education Statistics in the [School Attendance Boundary Survey (SABS)](https://nces.ed.gov/programs/edge/sabs) for the 2015-16 academic year.
+
+## Demographic Tables: 2023-2024 School Year
+
+Scroll down to see tables with counts and percents by school for student demographic composition by race or ethnicity, economic status, or English learner status. The tables can be sorted by any column by clicking on the up/down arrow next to the column name or by typing in school district name or school name. 
+
+### Race & Ethnicity
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+# Load demographic table data
+load("2024demographictablesrace.Rdata")
+load("2024demographictablesdisadvantaged.Rdata")
+load("2024demographictablesel.Rdata")
+
+students2024race <- students2024race %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) 
+
+students2024disadvantaged <- students2024disadvantaged %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) 
+
+students2024el <- students2024el %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) 
+
+# Build table - race and ethnicty
+htmltools::browsable(
+   tagList(
+reactable(students2024race, filterable = TRUE, minRows = 10,
+          columns = list(
+              division = colDef(name = "Division", sticky = "left",
+                                style = list(background = "#e3f1fe")),
+              school = colDef(name = "School", sticky = "left",
+                                style = list(background = "#e3f1fe")),
+              students = colDef(name = "Students", sticky = "left",
+                                style = list(background = "#e3f1fe"), filterable = FALSE),
+              count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_asian = colDef(name = "Asian",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_black = colDef(name = "Black",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_white = colDef(name = "White",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              count_multiracial = colDef(name = "Multiracial",
+                                style = list(background = "#f1ebff"), filterable = FALSE),
+              perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_asian = colDef(name = "Asian",
+                                style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_black = colDef(name = "Black",
+                                style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_white = colDef(name = "White",
+                                style = list(background = "#e6dbff"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+              perc_multiracial = colDef(name = "Multiracial",
+                                style = list(background = "#e6dbff"),
+                                format = colFormat(suffix = "%"), filterable = FALSE)),
+columnGroups = list(
+            colGroup(name = "Total", 
+                     columns = c("division", "school", "students")),
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_multiracial", "count_white")),
+            colGroup(name = "Percents by Race/Ethnic Identity",
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_multiracial", "perc_white"))),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_race"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2023_2024_race', 'table2023_2024_race.csv')")
+  )
+)
+
+```
+
+### Economic Status
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+# Build table - Economic status
+htmltools::browsable(
+   tagList(
+reactable(students2024disadvantaged, filterable = TRUE, minRows = 10, 
+          columns = list(
+               division = colDef(name = "Division", sticky = "left",
+                                style = list(background = "#e3f1fe", zIndex = 1)),
+               school = colDef(name = "School", sticky = "left",
+                                style = list(background = "#e3f1fe")),
+               students = colDef(name = "Students", sticky = "left",
+                                style = list(background = "#e3f1fe"), filterable = FALSE),    
+               count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#feeae3"), filterable = FALSE),
+                count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#feeae3"), filterable = FALSE),
+                perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#ffd4c4"),
+                               format = colFormat(suffix = "%"), filterable = FALSE),
+                perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#ffd4c4"),
+                               format = colFormat(suffix = "%"), filterable = FALSE)),
+            columnGroups = list(
+                colGroup(name = "Total", 
+                     columns = c("division", "school", "students")),
+                colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+                colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))),
+            
+            showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_econ"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2023_2024_econ', 'table2023_2024_econ.csv')")
+  )
+)
+
+```
+
+### English Learners
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+# Build table - English Learners
+htmltools::browsable(
+   tagList(
+reactable(students2024el, filterable = TRUE, minRows = 10, 
+          columns = list(
+                division = colDef(name = "Division", sticky = "left",
+                                style = list(background = "#e3f1fe", zIndex = 1)),
+                school = colDef(name = "School", sticky = "left",
+                                style = list(background = "#e3f1fe")),
+                students = colDef(name = "Students", sticky = "left",
+                                style = list(background = "#e3f1fe"), filterable = FALSE),    
+                count_nonel = colDef(name = "Non English Learner",
+                                style = list(background = "#fce9ec"), filterable = FALSE),
+                count_el = colDef(name = "English Learner",
+                              style = list(background = "#fce9ec"), filterable = FALSE),
+                perc_nonel = colDef(name = "Non English Learner",
+                                style = list(background = "#ffd2da"),
+                                format = colFormat(suffix = "%"), filterable = FALSE),
+                perc_el = colDef(name = "English Learner",
+                                style = list(background = "#ffd2da"),
+                                format = colFormat(suffix = "%"), filterable = FALSE)),
+        columnGroups = list(
+            colGroup(name = "Total", 
+                     columns = c("division", "school", "students")),
+            colGroup(name = "Counts by English Learner Status", 
+                     columns = c("count_el", "count_nonel")),
+            colGroup(name = "Percents by English Learner Status", 
+                     columns = c("perc_el", "perc_nonel"))
+        ),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_ell"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2023_2024_ell', 'table2023_2024_ell.csv')")
+  )
+)
+```
+
+To see previous years' demographics data for public schools in the Charlottesville area, see the [previous version of the school composition data](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition-2023/).
+
+## Citation
+
+Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2024. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.

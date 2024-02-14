@@ -1,0 +1,357 @@
+---
+lang: "en"
+title: "Charlottesville and Albemarle School Demographics"
+# author: "by Michele Claibourn, Nina Schoonover, & Elizabeth Mitchell"
+date: "Last Updated: March 20, 2023"
+output:
+  html_document:
+    template: atlas-rmd-template.html
+    # css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(reactable)
+library(htmltools)
+
+load("newstudents.Rdata")
+students2023 <- students2023 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+students2022 <- students2022 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+students2021 <- students2021 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+students2020 <- students2020 %>% 
+  separate(division, c("division", "locality")) %>% 
+  select(-c(year, locality)) %>% 
+  relocate(c(count_adv, count_disadv), .before = perc_aian)
+
+```
+
+## Demographic Tables {.tabset .tabset-pills}
+The tables below provide the demographic composition of Charlottesville and Albemarle Schools for 2022-2023, 2021-2022, 2020-2021, and 2019-2020.
+
+These numbers reflect Fall Membership numbers provided by the Virginia Department of Education's [Fall Membership Build-a-Table site](https://p1pe.doe.virginia.gov/apex_captcha/home.do?apexTypeId=304).
+
+According to VDOE documentation
+
+* Race or Ethnicity captures "the racial category that most closely reflects the student’s recognition of his or her community or with which the student identifies"
+* Economic status "identifies students as economically disadvantaged if they meet any one of the following: 1) is eligible for Free/Reduced Meals, or 2) receives TANF, or 3) is eligible for Medicaid, or 4) identified as either Migrant or experiencing Homelessness."
+
+Scroll further right to see the percent of a school's student body by race and the number and percent of students identified as economically disadvantaged. The tables can be sorted by any column by clicking on the up/down arrow next to the column name.
+
+### 2022-2023 Academic Year
+```{r}
+htmltools::browsable(
+   tagList(
+reactable(students2023,
+          columns = list(
+             division = colDef(name = "Division",
+                               sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            school = colDef(name = "School",
+                            sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            students = colDef(name = "Students",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#C5CCD2")),
+            count_asian = colDef(name = "Asian",
+                                style = list(background = "#C5CCD2")),
+            count_black = colDef(name = "Black",
+                                style = list(background = "#C5CCD2")),
+            count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#C5CCD2")),
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#C5CCD2")),
+            count_white = colDef(name = "White",
+                                style = list(background = "#C5CCD2")),
+            count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#B4D6DB")),
+            count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#B4D6DB")),
+            perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_asian = colDef(name = "Asian",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_black = colDef(name = "Black",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_white = colDef(name = "White",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%")),
+            perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%"))),
+          columnGroups = list(
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_white")),
+            colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+            colGroup(name = "Percents by Racial/Ethnic Identity", 
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_white")),
+            colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))
+          ),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table2022_2023"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2022_2023', 'table2022_2023.csv')")
+
+  )
+)
+          
+```
+
+### 2021-2022 Academic Year
+```{r}
+htmltools::browsable(
+   tagList(
+reactable(students2022,
+          columns = list(
+            division = colDef(name = "Division",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            school = colDef(name = "School",
+                            sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            students = colDef(name = "Students",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#C5CCD2")),
+            count_asian = colDef(name = "Asian",
+                                style = list(background = "#C5CCD2")),
+            count_black = colDef(name = "Black",
+                                style = list(background = "#C5CCD2")),
+            count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#C5CCD2")),
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#C5CCD2")),
+            count_white = colDef(name = "White",
+                                style = list(background = "#C5CCD2")),
+            count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#B4D6DB")),
+            count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#B4D6DB")),
+            perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_asian = colDef(name = "Asian",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_black = colDef(name = "Black",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_white = colDef(name = "White",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%")),
+            perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%"))),
+          columnGroups = list(
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_white")),
+            colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+            colGroup(name = "Percents by Racial/Ethnic Identity", 
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_white")),
+            colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))
+          ),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table2021_2022"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2021_2022', 'table2021_2022.csv')")
+
+  )
+)
+
+```
+
+### 2020-2021 Academic Year
+```{r}
+htmltools::browsable(
+   tagList(
+reactable(students2021,
+          columns = list(
+            division = colDef(name = "Division",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            school = colDef(name = "School",
+                            sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            students = colDef(name = "Students",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#C5CCD2")),
+            count_asian = colDef(name = "Asian",
+                                style = list(background = "#C5CCD2")),
+            count_black = colDef(name = "Black",
+                                style = list(background = "#C5CCD2")),
+            count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#C5CCD2")),
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#C5CCD2")),
+            count_white = colDef(name = "White",
+                                style = list(background = "#C5CCD2")),
+            count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#B4D6DB")),
+            count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#B4D6DB")),
+            perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_asian = colDef(name = "Asian",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_black = colDef(name = "Black",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_white = colDef(name = "White",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%")),
+            perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%"))),
+          columnGroups = list(
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_white")),
+            colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+            colGroup(name = "Percents by Racial/Ethnic Identity", 
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_white")),
+            colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))
+          ),
+          showSortable = TRUE, defaultPageSize = 13, elementId = "table2020_2021"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2020_2021', 'table2020_2021.csv')")
+
+  )
+)
+
+```
+
+### 2019-2020 Academic Year
+```{r}
+htmltools::browsable(
+   tagList(
+reactable(students2020,
+          columns = list(
+            division = colDef(name = "Division",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            school = colDef(name = "School",
+                            sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            students = colDef(name = "Students",
+                              sticky = "left",
+                                style = list(background = "#F4E3D3FF")),
+            count_aian = colDef(name = "Am. Indian AK Native",
+                                style = list(background = "#C5CCD2")),
+            count_asian = colDef(name = "Asian",
+                                style = list(background = "#C5CCD2")),
+            count_black = colDef(name = "Black",
+                                style = list(background = "#C5CCD2")),
+            count_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#C5CCD2")),
+            count_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#C5CCD2")),
+            count_white = colDef(name = "White",
+                                style = list(background = "#C5CCD2")),
+            count_adv = colDef(name = "Advantaged",
+                                style = list(background = "#B4D6DB")),
+            count_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#B4D6DB")),
+            perc_aian = colDef(name = "Am. Indian AK Native",
+                               style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_asian = colDef(name = "Asian",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_black = colDef(name = "Black",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_latinx = colDef(name = "Hispanic",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_nhpi = colDef(name = "Native HI Pacific Islander",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_white = colDef(name = "White",
+                                style = list(background = "#ADB7C0FF"),
+                               format = colFormat(suffix = "%")),
+            perc_adv = colDef(name = "Advantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%")),
+            perc_disadv = colDef(name = "Disadvantaged",
+                                style = list(background = "#94C5CCFF"),
+                               format = colFormat(suffix = "%"))),
+          columnGroups = list(
+            colGroup(name = "Counts by Racial/Ethnic Identity", 
+                     columns = c("count_aian", "count_asian", "count_black", "count_latinx",
+                                 "count_nhpi", "count_white")),
+            colGroup(name = "Counts by Economic Status", 
+                     columns = c("count_adv", "count_disadv")),
+            colGroup(name = "Percents by Racial/Ethnic Identity",
+                     columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
+                                 "perc_nhpi", "perc_white")),
+            colGroup(name = "Percents by Economic Status", 
+                     columns = c("perc_adv", "perc_disadv"))
+          ),
+          showSortable = TRUE, defaultPageSize = 13, elementId = "table2019_2020"),
+
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2019_2020', 'table2019_2020.csv')")
+
+  )
+)
+```
+
+## Citation
+
+Michele Claibourn, Nina Schoonover, and Elizabeth Mitchell. March 2023. "Charlottesville and Albemarle School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
+
