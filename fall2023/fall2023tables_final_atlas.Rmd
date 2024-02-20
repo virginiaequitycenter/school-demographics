@@ -405,4 +405,4 @@ To see previous years' demographics data for public schools in the Charlottesvil
 
 ## Citation
 
-Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2024. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
+Michele Claibourn, Christopher Hu, Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2024. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
