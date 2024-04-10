@@ -1,0 +1,350 @@
+---
+title: "Advanced Diplomas"
+date: "2024-03-28"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(janitor)
+library(scales)
+library(plotly)
+```
+
+```{r dataprep}
+advanced3 <- read_csv("advanced_diplomas_3years.csv")
+
+adv23 <- advanced3 %>% 
+  select(year, division, starts_with("percent")) %>% 
+  filter(year == 2022) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(`percent_advanced_All Students`),
+         highlight = case_when(
+           division == "Albemarle County" ~ "alb", 
+           division == "Charlottesville City" ~ "cvl", 
+           TRUE ~ "other")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% 
+  mutate(advanced = round(advanced, 1))
+```
+
+
+## Advanced Diplomas, 2022-2023 Class
+
+These data represent the percent of students graduating from each Virginia school division with an advanced diploma in 2023, as provided in the [School Quality Profiles](https://schoolquality.virginia.gov/).[^1]  
+
+The School Quality Profiles page offers the following description of diplomas and school completion outcomes:
+
+> Most Virginia students earn either an Advanced Studies Diploma or a Standard Diploma.
+
+> To graduate with an Advanced Studies Diploma, a student must earn at least 26 standard units of credit by passing required courses and electives and at least nine verified units of credit by passing Standards of Learning end-of-course assessments in English, mathematics, science and history. Students who entered the ninth grade in 2013-2014 and afterwards must also successfully complete one virtual course.
+
+> To graduate with a Standard Diploma, a student must earn at least 22 standard units of credit by passing required courses and electives, and earn at least six verified credits by passing end-of-course SOL tests or other assessments approved by the Board of Education. Students who entered the ninth grade in 2013-2014 and afterwards must earn a board-approved career and technical education credential to graduate and successfully complete one virtual course.
+
+### Among All Students (%)
+
+```{r class23, fig.height=10}
+p <- adv23 %>% 
+  filter(group == "All Students") %>% 
+  ggplot(aes(y = fct_reorder(division, order), x = advanced, 
+             color = highlight, 
+             text = paste("Division:", division))) +
+  geom_point(aes(size = highlight)) +
+  geom_segment(aes(y = division, yend = division,
+                   x = 0, xend = advanced)) +
+  labs(x = "Percent Advanced Diplomas", y = "") +
+  scale_x_continuous(labels = label_percent(scale = 1)) +
+  scale_color_manual(values = c("red", "orange", "grey"),
+                     guide = "none") +
+  scale_size_manual(values = c(3,3,2),
+                    guide = "none") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 7),
+        legend.position = "none") 
+
+ggplotly(p, tooltip = c("text", "x"))
+
+```
+
+### By Race or Ethnicity
+
+```{r race_white, fig.height = 10}
+# White students (%)
+p1 <- advanced3 %>% 
+  select(year, division, percent_advanced_White) %>% 
+  filter(year == 2022, !is.na(percent_advanced_White)) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(percent_advanced_White),
+         highlight = case_when(
+           division == "Albemarle County" ~ "alb", 
+           division == "Charlottesville City" ~ "cvl", 
+           TRUE ~ "other")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% 
+  mutate(advanced = round(advanced, 1)) %>% 
+  ggplot(aes(y = fct_reorder(division, order), x = advanced, 
+             color = highlight,
+             text = paste("Division:", division))) +
+  geom_point(aes(size = highlight)) +
+  geom_segment(aes(y = division, yend = division,
+                   x = 0, xend = advanced)) +
+  labs(x = "Percent Advanced Diplomas", y = "", title = "Among White Students") +
+  scale_x_continuous(labels = label_percent(scale = 1)) +
+  scale_color_manual(values = c("red", "orange", "grey"),
+                     guide = "none") +
+  scale_size_manual(values = c(3,3,2),
+                    guide = "none") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 7),
+        legend.position = "none")
+
+ggplotly(p1, tooltip = c("text", "x"))
+```
+
+```{r race_black, fig.height = 8}
+# Black students (%)
+p2 <- advanced3 %>% 
+  select(year, division, percent_advanced_Black) %>% 
+  filter(year == 2022, !is.na(percent_advanced_Black)) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(percent_advanced_Black),
+         highlight = case_when(
+           division == "Albemarle County" ~ "alb", 
+           division == "Charlottesville City" ~ "cvl", 
+           TRUE ~ "other")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% mutate(advanced = round(advanced, 1)) %>% 
+  ggplot(aes(y = fct_reorder(division, order), x = advanced, 
+             color = highlight,
+             text = paste("Division:", division))) +
+  geom_point(aes(size = highlight)) +
+  geom_segment(aes(y = division, yend = division,
+                   x = 0, xend = advanced)) +
+  labs(x = "Percent Advanced Diplomas", y = "", title = "Among Black Students") +
+  scale_x_continuous(labels = label_percent(scale = 1)) +
+  scale_color_manual(values = c("red", "orange", "grey"),
+                     guide = "none") +
+  scale_size_manual(values = c(3,3,2),
+                    guide = "none") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 7),
+        legend.position = "none")
+
+ggplotly(p2, tooltip = c("text", "x"))
+```
+
+```{r race_hisp, fig.height = 7}
+# Hispanic students (%)
+p3 <- advanced3 %>% 
+  select(year, division, percent_advanced_Hispanic) %>% 
+  filter(year == 2022, !is.na(percent_advanced_Hispanic)) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(percent_advanced_Hispanic),
+         highlight = case_when(
+           division == "Albemarle County" ~ "alb", 
+           division == "Charlottesville City" ~ "cvl", 
+           TRUE ~ "other")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% mutate(advanced = round(advanced, 1)) %>% 
+  ggplot(aes(y = fct_reorder(division, order), x = advanced, 
+             color = highlight,
+             text = paste("Division:", division))) +
+  geom_point(aes(size = highlight)) +
+  geom_segment(aes(y = division, yend = division,
+                   x = 0, xend = advanced)) +
+  labs(x = "Percent Advanced Diplomas", y = "", title = "Among Hispanic Students") +
+  scale_x_continuous(labels = label_percent(scale = 1)) +
+  scale_color_manual(values = c("red", "orange", "grey"),
+                     guide = "none") +
+  scale_size_manual(values = c(3,3,2),
+                    guide = "none") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 7),
+        legend.position = "none")
+
+ggplotly(p3, tooltip = c("text", "x"))
+```
+
+```{r race_asian, fig.height = 4}
+# Asian students (%)
+p4 <- advanced3 %>% 
+  select(year, division, percent_advanced_Asian) %>% 
+  filter(year == 2022, !is.na(percent_advanced_Asian)) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(percent_advanced_Asian),
+         highlight = case_when(
+           division == "Albemarle County" ~ "alb", 
+           division == "Charlottesville City" ~ "cvl", 
+           TRUE ~ "other")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% mutate(advanced = round(advanced, 1)) %>% 
+  ggplot(aes(y = fct_reorder(division, order), x = advanced, 
+             color = highlight,
+             text = paste("Division:", division))) +
+  geom_point(aes(size = highlight)) +
+  geom_segment(aes(y = division, yend = division,
+                   x = 0, xend = advanced)) +
+  labs(x = "Percent Advanced Diplomas", y = "", title = "Among Asian Students") +
+  scale_x_continuous(labels = label_percent(scale = 1)) +
+  scale_color_manual(values = c("red", "orange", "grey"),
+                     guide = "none") +
+  scale_size_manual(values = c(3,3,2),
+                    guide = "none") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 7),
+        legend.position = "none")
+
+ggplotly(p4, tooltip = c("text", "x"))
+```
+
+## Advanced Diplomas, 2020-21 through 2022-23 Class
+
+Below are the same data for the three years for which data are available to download from the [School Quality Profiles pages](https://schoolquality.virginia.gov/download-data), shown for only a subset of school divisions.
+
+### Among All Students
+
+In selected jurisdictions
+
+```{r class2123}
+adv2123 <- advanced3 %>% 
+  select(year, division, starts_with("percent")) %>% 
+  filter(str_detect(division, 
+                    "Loudoun|Fairfax|Chesterfield|
+                    Fluvanna|Prince William|Louisa|
+                    Orange|Greene|Albemarle|
+                    Virginia Beach|Charlottesville|Henrico|
+                    Buckingham|Richmond City|Waynesboro")) %>% 
+  mutate(division = str_remove(division, " Public Schools"),
+         order = dense_rank(`percent_advanced_All Students`),
+         highlight = ifelse(division == "Albemarle County", "yes", "no")) %>% 
+  pivot_longer(starts_with("percent"), names_prefix = "percent_advanced_",
+               names_to = "group", values_to = "advanced") %>% mutate(advanced = round(advanced, 1))
+
+adv2123_endpoints <- adv2123 %>% 
+  filter(group == "All Students", year == 2022)
+
+p <- adv2123 %>% 
+  filter(group == "All Students") %>% 
+  ggplot(aes(y = advanced, x = year, color = as.factor(division), text = paste("Division:", division))) +
+  geom_line() +
+  geom_point() +
+  geom_text(data = adv2123_endpoints, size = 4,
+            aes(label = division, x = year + 0.3)) + 
+  labs(y = "Percent Advanced Diplomas", x = "") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = c(2020, 2021, 2022),
+                     expand = expansion(add = c(0.05,0.33))) +
+  scale_color_manual(values = c("red", "orange", rep("grey",9)),
+                     guide = "none") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplotly(p, tooltip = c("text", "y", "x"))
+```
+
+### By Race or Ethnicity
+
+In selected jurisdictions
+
+```{r trend_white}
+# White
+adv2123_endpoints <- adv2123 %>% 
+  filter(group == "White", year == 2022)
+
+p1 <- adv2123 %>% 
+  filter(group == "White") %>% 
+  ggplot(aes(y = advanced, x = year, color = as.factor(division), text = paste("Division:", division))) +
+  geom_line() +
+  geom_point() +
+  geom_text(data = adv2123_endpoints, size = 4,
+            aes(label = division, x = year + 0.3)) + 
+  labs(y = "Percent Advanced Diplomas", x = "", title = "Among White Students") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = c(2020, 2021, 2022),
+                     expand = expansion(add = c(0.05,0.33))) +
+  scale_color_manual(values = c("red", "orange", rep("grey",9)),
+                     guide = "none") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplotly(p1, tooltip = c("text", "y", "x"))
+```
+
+```{r trend_black}
+# Black
+adv2123_endpoints <- adv2123 %>% 
+  filter(group == "Black", year == 2022)
+
+p2 <- adv2123 %>% 
+  filter(group == "Black") %>% 
+  ggplot(aes(y = advanced, x = year, color = as.factor(division), text = paste("Division:", division))) +
+  geom_line() +
+  geom_point() +
+  geom_text(data = adv2123_endpoints, size = 4,
+            aes(label = division, x = year + 0.3)) + 
+  labs(y = "Percent Advanced Diplomas", x = "", title = "Among Black Students") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = c(2020, 2021, 2022),
+                     expand = expansion(add = c(0.05,0.33))) +
+  scale_color_manual(values = c("red", "orange", rep("grey",9)),
+                     guide = "none") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplotly(p2, tooltip = c("text", "y", "x"))
+```
+
+```{r trend_hisp}
+# Hispanic
+adv2123_endpoints <- adv2123 %>% 
+  filter(group == "Hispanic", year == 2022)
+
+p3 <- adv2123 %>% 
+  filter(group == "Hispanic") %>% 
+  ggplot(aes(y = advanced, x = year, color = as.factor(division), text = paste("Division:", division))) +
+  geom_line() +
+  geom_point() +
+  geom_text(data = adv2123_endpoints, size = 4,
+            aes(label = division, x = year + 0.3)) + 
+  labs(y = "Percent Advanced Diplomas", x = "", title = "Among Hispanic Students") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = c(2020, 2021, 2022),
+                     expand = expansion(add = c(0.05,0.33))) +
+  scale_color_manual(values = c("red", "orange", rep("grey",9)),
+                     guide = "none") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplotly(p3, tooltip = c("text", "y", "x"))
+```
+
+```{r trend_asian}
+# Asian
+adv2123_endpoints <- adv2123 %>% 
+  filter(group == "Asian", year == 2022)
+
+p4 <- adv2123 %>% 
+  filter(group == "Asian") %>% 
+  ggplot(aes(y = advanced, x = year, color = as.factor(division), text = paste("Division:", division))) +
+  geom_line() +
+  geom_point() +
+  geom_text(data = adv2123_endpoints, size = 4,
+            aes(label = division, x = year + 0.3)) + 
+  labs(y = "Percent Advanced Diplomas", x = "", title = "Among Asian Students") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = c(2020, 2021, 2022),
+                     expand = expansion(add = c(0.05,0.33))) +
+  scale_color_manual(values = c("red", "orange", rep("grey",9)),
+                     guide = "none") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplotly(p4, tooltip = c("text", "y", "x"))
+```
+
+[^1]: For example, the School Quality Profile, College & Career Readiness data for [Albemarle County Public Schools](https://schoolquality.virginia.gov/divisions/albemarle-county-public-schools#desktopTabs-4).
