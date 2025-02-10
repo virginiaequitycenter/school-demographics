@@ -1,8 +1,9 @@
 ---
 title: "Local School Demographics"
 date: "Last Updated: February 2025"
-output: html_document
-#    template: atlas-rmd-template.html
+output: 
+  html_document:
+    template: school-demographics-template.html
 ---
 ```{css, echo=FALSE}
 div.leaflet-popup-content tbody, 
@@ -336,9 +337,9 @@ columnGroups = list(
             colGroup(name = "Percents by Race/Ethnic Identity",
                      columns = c("perc_aian", "perc_asian", "perc_black", "perc_latinx",
                                  "perc_nhpi", "perc_multiracial", "perc_white"))),
-          showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_race"),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table_race"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2024_2025_race', 'table2024_2025_race.csv')")
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_race', 'table_race.csv')")
   )
 )
 
@@ -377,9 +378,9 @@ reactable(students2024disadvantaged, filterable = TRUE, minRows = 10,
                 colGroup(name = "Percents by Economic Status", 
                      columns = c("perc_adv", "perc_disadv"))),
             
-            showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_econ"),
+            showSortable = TRUE, defaultPageSize = 12, elementId = "table_econ"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2023_2024_econ', 'table2023_2024_econ.csv')")
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_econ', 'table_econ.csv')")
   )
 )
 
@@ -418,9 +419,9 @@ reactable(students2024el, filterable = TRUE, minRows = 10,
             colGroup(name = "Percents by English Learner Status", 
                      columns = c("perc_el", "perc_nonel"))
         ),
-          showSortable = TRUE, defaultPageSize = 12, elementId = "table2023_2024_ell"),
+          showSortable = TRUE, defaultPageSize = 12, elementId = "table_el"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table2024_2025_el','table2024_2025_el.csv')")
+    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_el','table_el.csv')")
   )
 )
 ```

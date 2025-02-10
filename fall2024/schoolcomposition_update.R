@@ -241,9 +241,6 @@ va_counties <- va_counties %>% mutate(NAMELSAD= ifelse(NAMELSAD=="Staunton city"
 va_counties <- va_counties %>% mutate(NAMELSAD= ifelse(NAMELSAD=="Waynesboro city", "Waynesboro City", NAMELSAD))
 va_counties <- va_counties %>% subset(NAMELSAD %in% c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County","Orange County", "Staunton City", "Waynesboro City"))
 
-# WARNING MESSAGE - CHECK WITH BETH
-va_counties <- va_counties %>% st_transform("+init=epsg:4326")
-
 #Setting the colors 
 districtpalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"),
                                domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County", "Orange County","Staunton City", "Waynesboro City"))
@@ -299,15 +296,6 @@ map <- leaflet(schoolmapdata2024) %>%
 
 map
 
-## Create full CSV of 2019-20XX year data
-
-fullrace <- read_csv("fullrace_2019_2025.csv")
-fullel <- read_csv("fullenglishlearner_2019_2025.csv")
-fulldisadv <- read_csv("fulldisadvantaged_2019_2025.csv")
-
-fullcsv <- left_join(fullrace, fullel, by = c("School Year", "Division Name", "School Name")) %>% 
-  left_join(., fulldisadv, by=c("School Year", "Division Name", "School Name")) %>%  
-  select(-c("students.y", "students.x"))
 
 
 
