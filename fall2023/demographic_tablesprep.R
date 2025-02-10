@@ -1,4 +1,4 @@
-#Nina Schoonover -- January 2023
+#Nina Schoonover -- February 2025
 
 # updating school demographics tables to include race, economically disadvantaged, and english learners
 # adding all local districts: albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro) 
@@ -10,7 +10,7 @@ library(janitor)
 
 #VD0E membership build-a-table
 # Query parameters: race.csv
-#   school years = 2023-2024
+#   school years = 20XX-20XX
 #   report level = school
 #   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
 #   schools = all schools
@@ -19,7 +19,7 @@ library(janitor)
 #   [everything else] = all students
 #   
 # Query parameters: disadvantaged.csv
-#   school years = 2023-2024
+#   school years = 20XX-20XX
 #   report level = school
 #   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange, staunton, waynesboro
 #   schools = all schools
@@ -29,7 +29,7 @@ library(janitor)
 #   [everything else] = all students
 
 # Query parameters: englishlearner.csv
-#   school years = 2023-2024
+#   school years = 20XX-20XX
 #   report level = school
 #   divisions = albemarle, augusta, buckingham, charlottesville, fluvanna, greene, louisa, madison, nelson, orange staunton, waynesboro
 #   schools = all schools
