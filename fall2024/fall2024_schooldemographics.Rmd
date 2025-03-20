@@ -3,7 +3,7 @@ title: "Local School Demographics"
 date: "Last Updated: February 2025"
 output: 
   html_document:
-    template: school-demographics-template.html
+    template: external-rmd-template.html
 ---
 ```{css, echo=FALSE}
 div.leaflet-popup-content tbody, 
@@ -52,8 +52,7 @@ bbox <- st_bbox(va_counties$geometry) %>% as.vector()
 #Let's make a map
 
 #Setting the colors 
-districtpalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"),
-                               domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County", "Orange County","Staunton City", "Waynesboro City"))
+districtpalette <- colorFactor(palette= c("#E73F74","#4b4b8f","#3969AC","#7F3C8D","#11A579","#80BA5A","#661150","#008695","#F2B701","#E68310","#CF1C90","#f97b72"), domain = c("Albemarle County", "Augusta County", "Buckingham County", "Charlottesville City", "Fluvanna County", "Greene County","Louisa County", "Madison County","Nelson County", "Orange County","Staunton City", "Waynesboro City"))
 
 shape_hs <- st_read(dsn="data/SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_High.shp") 
 shape_ms <- st_read(dsn="data/SABS 1516 CVille Region/SABS_1516_VA_CvilleRegion_Middle.shp")
@@ -257,7 +256,7 @@ leaflet() %>%
 
 School boundary data reflects information gathered by the National Center for Education Statistics in the [School Attendance Boundary Survey (SABS)](https://nces.ed.gov/programs/edge/sabs) for the 2015-16 academic year.
 
-## Demographic Tables: 2023-2024 School Year
+## Demographic Tables
 
 Scroll down to see tables with counts and percents by school for student demographic composition by race or ethnicity, economic status, or English learner status. The tables can be sorted by any column by clicking on the up/down arrow next to the column name or by typing in school district name or school name. 
 
@@ -272,21 +271,23 @@ load("data/2024tablesel.Rdata")
 
 students2024race <- students2024race %>% 
   separate(division, c("division", "locality")) %>% 
-  select(-c(year, locality)) 
+  select(-c(locality)) 
 
 students2024disadvantaged <- students2024disadvantaged %>% 
   separate(division, c("division", "locality")) %>% 
-  select(-c(year, locality)) 
+  select(-c(locality)) 
 
 students2024el <- students2024el %>% 
   separate(division, c("division", "locality")) %>% 
-  select(-c(year, locality)) 
+  select(-c(locality)) 
 
 # Build table - race and ethnicty
 htmltools::browsable(
    tagList(
 reactable(students2024race, filterable = TRUE, minRows = 10,
           columns = list(
+              year = colDef(name = "School Year", sticky = "left",
+                                style = list(background = "#e3f1fe")),
               division = colDef(name = "Division", sticky = "left",
                                 style = list(background = "#e3f1fe")),
               school = colDef(name = "School", sticky = "left",
@@ -330,7 +331,7 @@ reactable(students2024race, filterable = TRUE, minRows = 10,
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
 columnGroups = list(
             colGroup(name = "Total", 
-                     columns = c("division", "school", "students")),
+                     columns = c("students")),
             colGroup(name = "Counts by Racial/Ethnic Identity", 
                      columns = c("count_aian", "count_asian", "count_black", "count_latinx",
                                  "count_nhpi", "count_multiracial", "count_white")),
@@ -339,7 +340,7 @@ columnGroups = list(
                                  "perc_nhpi", "perc_multiracial", "perc_white"))),
           showSortable = TRUE, defaultPageSize = 12, elementId = "table_race"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_race', 'table_race.csv')")
+    tags$button(class= "btn btn-default btn-lg", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_race', 'table_race.csv')")
   )
 )
 
@@ -354,6 +355,8 @@ htmltools::browsable(
    tagList(
 reactable(students2024disadvantaged, filterable = TRUE, minRows = 10, 
           columns = list(
+               year = colDef(name = "School Year", sticky = "left",
+                                style = list(background = "#e3f1fe")),
                division = colDef(name = "Division", sticky = "left",
                                 style = list(background = "#e3f1fe", zIndex = 1)),
                school = colDef(name = "School", sticky = "left",
@@ -372,7 +375,7 @@ reactable(students2024disadvantaged, filterable = TRUE, minRows = 10,
                                format = colFormat(suffix = "%"), filterable = FALSE)),
             columnGroups = list(
                 colGroup(name = "Total", 
-                     columns = c("division", "school", "students")),
+                     columns = c("students")),
                 colGroup(name = "Counts by Economic Status", 
                      columns = c("count_adv", "count_disadv")),
                 colGroup(name = "Percents by Economic Status", 
@@ -380,7 +383,7 @@ reactable(students2024disadvantaged, filterable = TRUE, minRows = 10,
             
             showSortable = TRUE, defaultPageSize = 12, elementId = "table_econ"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_econ', 'table_econ.csv')")
+    tags$button(class= "btn btn-default btn-lg", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_econ', 'table_econ.csv')")
   )
 )
 
@@ -395,6 +398,8 @@ htmltools::browsable(
    tagList(
 reactable(students2024el, filterable = TRUE, minRows = 10, 
           columns = list(
+                year = colDef(name = "School Year", sticky = "left",
+                                style = list(background = "#e3f1fe")),
                 division = colDef(name = "Division", sticky = "left",
                                 style = list(background = "#e3f1fe", zIndex = 1)),
                 school = colDef(name = "School", sticky = "left",
@@ -413,7 +418,7 @@ reactable(students2024el, filterable = TRUE, minRows = 10,
                                 format = colFormat(suffix = "%"), filterable = FALSE)),
         columnGroups = list(
             colGroup(name = "Total", 
-                     columns = c("division", "school", "students")),
+                     columns = c("students")),
             colGroup(name = "Counts by English Learner Status", 
                      columns = c("count_el", "count_nonel")),
             colGroup(name = "Percents by English Learner Status", 
@@ -421,13 +426,12 @@ reactable(students2024el, filterable = TRUE, minRows = 10,
         ),
           showSortable = TRUE, defaultPageSize = 12, elementId = "table_el"),
 
-    tags$button(class= "btn btn-default atlas-btn", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_el','table_el.csv')")
+    tags$button(class= "btn btn-default btn-lg", "Download as CSV", onclick = "Reactable.downloadDataCSV('table_el','table_el.csv')")
   )
 )
 ```
 
-To see previous years' demographics data for public schools in the Charlottesville area, see the [previous version of the school composition data](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition-2023/).
 
 ## Citation
 
-Michele Claibourn, Christopher Hu, Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2025. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/cville-equity-atlas/reports/school-composition/.
+Michele Claibourn, Christopher Hu, Elizabeth Mitchell, Asha Muralidharan, and Nina Schoonover. February 2025. "Local School Demographics." UVA Democracy Initiative Center for the Redress of Inequity through Community-Engaged Scholarship. https://virginiaequitycenter.github.io/school-demographics/fall2024/fall2024_schooldemographics.html
