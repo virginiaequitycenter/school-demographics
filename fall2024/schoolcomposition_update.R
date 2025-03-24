@@ -10,6 +10,7 @@ library(leaflet)
 library(leaflegend)
 library(sf)
 library(tigris)
+library(readxl)
 
 # Pull data from VD0E membership build-a-table
 
@@ -79,23 +80,24 @@ library(tigris)
 #set working directory
 
 #read in latlong csv
-latlong <- read_csv("school_lat_long.csv")
+latlong <- read_csv("school_lat_long.csv") %>% select(!"school")
 
 # read data ----
 race_ethn <- read_csv("race.csv") %>% 
   clean_names() %>% 
-  select(-c(division_number, school_number,ft_count, pt_count)) %>% 
+  select(-c(division_number,ft_count, pt_count)) %>% 
   rename(count = total_count, school = school_name, division = division_name, year = school_year)
 
 disadvant <- read_csv("disadvantaged.csv") %>% 
   clean_names() %>% 
-  select(-c(division_number, school_number, ft_count, pt_count)) %>% 
+  select(-c(division_number, ft_count, pt_count)) %>% 
   rename(count = total_count, school = school_name, division = division_name, year = school_year)
 
 el <- read_csv("englishlearner.csv") %>% 
   clean_names() %>% 
-  select(-c(division_number, school_number, ft_count, pt_count)) %>% 
+  select(-c(division_number, ft_count, pt_count)) %>% 
   rename(count = total_count, school = school_name, division = division_name, year = school_year)
+
 
 #build tables
 race_ethn <- race_ethn %>% 
@@ -108,7 +110,7 @@ race_ethn <- race_ethn %>%
 
 colnames(race_ethn)
 
-names(race_ethn) <- c("year", "division", "school", "students", "count_aian",
+names(race_ethn) <- c("year", "division", "school_number", "school", "students", "count_aian",
                       "count_asian", "count_black",
                       "count_latinx", "count_multiracial", "count_white",
                       "count_nhpi", "perc_aian", "perc_asian", 
@@ -129,7 +131,7 @@ disadvant <- disadvant %>%
 
 colnames(disadvant)
 
-names(disadvant) <- c("year", "division", "school", "students", 
+names(disadvant) <- c("year", "division", "school_number", "school", "students", 
                       "count_adv", "count_disadv", "perc_adv", "perc_disadv")
 
 el <- el %>%  
@@ -146,13 +148,13 @@ el <- el %>%
 
 colnames(el)
 
-names(el) <- c("year", "division", "school", "students", 
+names(el) <- c("year", "division", "school_number", "school", "students", 
                "count_nonel", "count_el", "perc_nonel", "perc_el")
 
 # combine tables and save 
 
-students2024 <- left_join(race_ethn, disadvant, by = c("year", "division", "school")) %>% 
-  left_join(., el, by=c("year", "division", "school")) %>%  
+students2024 <- left_join(race_ethn, disadvant, by = c("year", "division", "school_number", "school")) %>% 
+  left_join(., el, by=c("year", "division", "school_number", "school")) %>%  
   select(-c("students.y", "students.x"))
 
 students2024race <- race_ethn
@@ -225,7 +227,7 @@ students2024 <- merge(students2024, district) %>%
 
 #combine latitude and longitude into school data
 
-schoolmapdata2024 <- merge(students2024, latlong)
+schoolmapdata2024 <- merge(students2024, latlong, all.x=TRUE,all.y=TRUE)
 
 #save Rdata files
 
