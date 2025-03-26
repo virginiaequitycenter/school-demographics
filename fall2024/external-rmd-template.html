@@ -1,7 +1,7 @@
 <!-- R Markdown HTML Template for external link for Charlottesville Equity Atlas -->
 <!DOCTYPE html>
 
-<html$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$$if(dir)$ dir="$dir$"$endif$>
+<html $if(lang)$ lang="$lang$" xml:lang="$lang$" $else$ lang="en" $endif$ $if(dir)$ dir="$dir$"$endif$  prefix="og: https://ogp.me/ns#">
 
 <head>
 
@@ -10,12 +10,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="og:locale" content="en_US"/>
-<meta property="og:site_name" content="$pagetitle$"/>
+<meta property="og:site_name" content="Community-Centered Analysis | Charlottesville Regional Data Resource Hub">
+<meta property="og:title" content="$pagetitle$">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://raw.githubusercontent.com/virginiaequitycenter/cville-equity-atlas/refs/heads/main/assets/img/atlas-image-card.png">
 <meta property="og:image:type" content="image/jpg">
-<meta property="og:image:width" content="2134">
-<meta property="og:image:height" content="1160">
 
 $if(theme)$
 $else$
@@ -865,7 +864,7 @@ $endif$
                             Resources
                         </a>
                     </li>
-                    
+
                 </ul>
                 
             </nav>
