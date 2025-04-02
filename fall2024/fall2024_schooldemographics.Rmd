@@ -1,6 +1,7 @@
 ---
 title: "Local School Demographics"
 date: "Last Updated: February 2025"
+description: "Demographic composition of local schools provided by the Virginia Department of Education."
 output: 
   html_document:
     template: external-rmd-template.html
