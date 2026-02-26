@@ -110,12 +110,12 @@ race_ethn <- race_ethn %>%
 
 colnames(race_ethn)
 
-names(race_ethn) <- c("year", "division", "school_number", "school", "students", "count_aian",
-                      "count_asian", "count_black",
-                      "count_latinx", "count_multiracial", "count_white",
-                      "count_nhpi", "perc_aian", "perc_asian", 
-                      "perc_black", "perc_latinx", "perc_multiracial",
-                      "perc_white", "perc_nhpi" )
+names(race_ethn) <- c("year", "division", "school_number", "school", "students",
+                      "count_asian", "count_black", "count_latinx", "count_multiracial", "count_white", 
+                      "count_aian", "count_nhpi", 
+                      "perc_asian", "perc_black", 
+                      "perc_latinx", "perc_multiracial", "perc_white",
+                      "perc_aian", "perc_nhpi" )
 
 disadvant <- disadvant %>%  
   mutate(count = if_else(count == "<", "9", count), 
@@ -220,7 +220,7 @@ district <- tot_dist %>%
   left_join(tot_disadv) %>% 
   left_join(tot_el)
 
-# combine total district data into students2024 and round decimals to one point
+# combine total district data into students2025 and round decimals to one point
 
 students2025 <- merge(students2025, district) %>% 
   mutate(across(where(is.numeric), round, 1))
