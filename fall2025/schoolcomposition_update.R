@@ -141,7 +141,7 @@ el <- el %>%
   group_by(school) %>% 
   mutate(num_students = sum(count, na.rm = TRUE)) %>% 
   ungroup() %>% 
-  mutate(percent = (count/1975)*100,
+  mutate(percent = (count/num_students)*100,
          percent = round(percent, 1)) %>% 
   pivot_wider(names_from = english_learners_include_former_e_ls, values_from = c(count, percent)) %>% 
   mutate(across(where(is.numeric), ~replace(., is.na(.), 0)))
@@ -175,7 +175,7 @@ tot_dist <- students2025 %>%
 
 tot_aian <- students2025 %>% 
   group_by(division) %>% 
-  summarize(d_aian = sum(count_aian)*100/sum(students))
+  summarize(d_aian = (sum(count_aian)/sum(students))*100)
 
 tot_asian <- students2025 %>% 
   group_by(division) %>% 
